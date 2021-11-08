@@ -1,0 +1,1759 @@
+﻿<!DOCTYPE HTML>
+@*CONTROL INDEX*@
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/assets/css/main.css">
+
+
+<script type="text/javascript">
+
+        var vMes = '@ViewBag.MES';
+        var vAno = '@ViewBag.YEAR';
+        var vDiaAC = '@ViewBag.DAY';
+
+        var producto = '@ViewBag.NombreProducto'
+
+        window.onload = load;
+
+
+
+       function diaSemanaP(dia, mes, anio) {
+        var dias = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
+        var dt = new Date(mes + ' ' + dia + ', ' + anio + ' 12:00:00');
+        //console.log(dias[dt.getUTCDay()]);
+        return dias[dt.getUTCDay()]
+    };
+
+    function load() {
+
+        funControles('PRESTAMO DE LIBRE DISPONIBILIDAD'); //Funcion para traer la data de los graficos
+
+        funTablaDinamica('PRESTAMO DE LIBRE DISPONIBILIDAD');     
+
+    };
+
+
+
+
+    function funControles(nombre) {
+
+
+
+        //------- Tiempos mes
+        function EncuentrosTiemposBandeja(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+        var arrEncuentroTablaTiemposBandeja = [];
+        var arrEncuentroTablaTiemposBandejaOrdenado = [];
+        var arrEncuentroTablaTiemposBandejaOrdenadoF = [];
+
+        //--------- Tiempos Oferta aprobada
+
+        function EncuentrosTiemposBandejaOfertaAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+         var arrEncuentroTablaTiemposBandejaOfertaAprobada = [];
+
+         //--------- Tiempos Oferta Regular
+
+        function EncuentrosTiemposBandejaOfertaRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+         var arrEncuentroTablaTiemposBandejaOfertaRegular = [];
+
+        ///----------------------------------------------------------------------
+
+
+         //--------- Tiempos Atencion Perfil Mes
+
+        function EncuentrosTiemposBandejaPerfilMes(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+        var arrEncuentroTablaTiemposBandejaPerfilMes = [];
+
+
+
+          //--------- Tiempos Atencion Perfil Aprobada Mes
+
+        function EncuentrosTiemposBandejaPerfilAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+         var arrEncuentroTablaTiemposBandejaPerfilAprobada = [];
+
+         //--------- Tiempos Atencion Perfil Aprobada Mes
+
+        function EncuentrosTiemposBandejaPerfilRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+
+         var arrEncuentroTablaTiemposBandejaPerfilRegular = [];
+
+
+
+
+          //------------------------------------------------- Histograma de Desembolso Mes
+
+        function EncuentrosHistogramaMes(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentroTablaHistogramaMes = [];
+        //---------------------------------- Histograma de Desembolso Mes PARETO
+        function EncuentrosHistogramaParetoMes(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentroTablaHistogramaParetoMes = [];
+
+
+         //------------------------------------------------- Histograma de Desembolso Aprobado
+
+        function EncuentrosHistogramaMesAprobado(y,label) {
+            this.y = y;
+            this.label = label;
+        };
+        var arrEncuentroTablaHistogramaMesAprobado = [];
+        //---------------------------------- Histograma de Desembolso Mes APROBADO PARETO
+
+          function EncuentrosHistogramaMesParetoAprobado(y,label) {
+            this.y = y;
+            this.label = label;
+        };
+        var arrEncuentroTablaHistogramaMesParetoAprobado = [];
+
+
+         //------------------------------------------------- Histograma de Desembolso Regular
+
+        function EncuentrosHistogramaMesRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentroTablaHistogramaMesRegular = [];
+
+          function EncuentrosHistogramaMesParetoRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentroTablaHistogramaMesParetoRegular = [];
+
+
+         //------------------------------------------------- CONTROL: Porcentajes de Reprocesos
+
+        function EncuentrosPorcentajeReprocesos(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosPorcentajeReprocesos = [];
+
+          function EncuentrosPorcentajeReprocesosVO(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosPorcentajeReprocesosVO = [];
+
+
+          //------------------------------------------------- CONTROL: Histograma de Reprocesos
+
+        function EncuentrosHistogramaReprocesos(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosHistogramaReprocesos = [];
+
+          function EncuentrosHistogramaReprocesosPareto(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosHistogramaReprocesosPareto = [];
+
+
+
+         //-------------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: PORCENTAJE ACUMULADO y sIGUIENTE        
+
+            //-------------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: MES 1
+
+        function EncuentrosReprocesosMes1(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosReprocesosMes1 = [];
+
+            //-------------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: MES 2
+
+        function EncuentrosReprocesosMes2(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosReprocesosMes2 = [];
+
+         //-------------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: MES 3
+
+        function EncuentrosReprocesosMes3(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosReprocesosMes3 = [];
+
+        //------------------------------------------------------------------------------------------------
+
+         //-------------------------------------- GRAFICOS NUMERO DE REPROCESOS DIARIO
+
+        function EncuentrosCantidadReprocesos(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosCantidadReprocesos = [];
+
+
+        //-------------------------------------- GRAFICOS NUMERO DE REPROCESOS - ACUMULADO
+
+        function EncuentrosReprocesosAcumulado(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrEncuentrosReprocesosAcumulado = [];
+
+
+
+       var index = [4, 0, 1, 5, 6, 7, 2, 3];
+       var salida1 = []
+          //--------------------------------------------------------------------------------------- GRAFICOS
+         var url = "/CONTROL/FunListarBandeja";
+         $.get(url, { nombre: nombre, tipo: 'DÍAS ÚTILES', txtTras: '@ViewBag.txtTras' }, function (data) {
+             //console.log(data);
+             data.forEach(function (element) {
+
+
+
+                 if (element.nombrE_TIPO_OFERTA == "MES" && element.tipo == "DÍAS ÚTILES")
+                 {
+                     arrEncuentroTablaTiemposBandeja.push(new EncuentrosTiemposBandeja(element.percentil, element.perfil));
+
+                     //ordenar "label" que será el día
+                     //arrEncuentroTablaTiemposBandeja.sort(function (a, b) { return a.label - b.label });
+                 }
+
+                 arrEncuentroTablaTiemposBandejaOrdenado = index.map(i => arrEncuentroTablaTiemposBandeja[i]);
+                 //console.log(arrEncuentroTablaTiemposBandejaOrdenado);
+
+                  if (element.nombrE_TIPO_OFERTA == "APROBADO MES" && element.tipo == "DÍAS ÚTILES")
+                  {
+                      arrEncuentroTablaTiemposBandejaOfertaAprobada.push(new EncuentrosTiemposBandejaOfertaAprobada(element.percentil, element.perfil));
+                  }
+                  if (element.nombrE_TIPO_OFERTA == "REGULAR MES" && element.tipo == "DÍAS ÚTILES")
+                  {
+                      arrEncuentroTablaTiemposBandejaOfertaRegular.push(new EncuentrosTiemposBandejaOfertaRegular(element.percentil, element.perfil));
+                  }
+
+
+
+             });
+
+         });
+        //console.log(arrEncuentroTablaTiemposBandeja);
+         //--------------------------------------------------------------------------------------- GRAFICOS
+         var url = "/CONTROL/FunListarPerfilBandeja";
+         $.get(url, { nombre: nombre, tipo: 'DÍAS ÚTILES', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+
+                 if (element.nombrE_TIPO_OFERTA == "MES" && element.tipo == "DÍAS ÚTILES")
+                 {
+                     arrEncuentroTablaTiemposBandejaPerfilMes.push(new EncuentrosTiemposBandejaPerfilMes(element.percentil, element.perfil));
+
+                     //ordenar "label" que será el día
+                     //arrEncuentroTablaTiemposBandeja.sort(function (a, b) { return a.label - b.label });
+                  }
+                  if (element.nombrE_TIPO_OFERTA == "APROBADO MES" && element.tipo == "DÍAS ÚTILES")
+                  {
+                      arrEncuentroTablaTiemposBandejaPerfilAprobada.push(new EncuentrosTiemposBandejaPerfilAprobada(element.percentil, element.perfil));
+                  }
+                  if (element.nombrE_TIPO_OFERTA == "REGULAR MES" && element.tipo == "DÍAS ÚTILES")
+                  {
+                      arrEncuentroTablaTiemposBandejaPerfilRegular.push(new EncuentrosTiemposBandejaPerfilRegular(element.percentil, element.perfil));
+                  }
+
+
+
+             });
+             //console.log(arrEncuentroTablaTiemposBandeja);
+         });
+
+
+        //--------------------------------------------------------------------------------------- GRAFICOS
+         var url = "/CONTROL/FunListarHistogramas";
+         $.get(url, { nombre: nombre, tipo: 'MES', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+
+                 if (element.tipo == "MES")
+                 {
+                     arrEncuentroTablaHistogramaMes.push(new EncuentrosHistogramaMes(element.f, element.rango));
+                     arrEncuentroTablaHistogramaParetoMes.push(new EncuentrosHistogramaParetoMes(element.ht, element.rango));
+                     //ordenar "label" que será el día
+                     //arrEncuentroTablaTiemposBandeja.sort(function (a, b) { return a.label - b.label });
+                  }
+                  if (element.tipo == "APROBADO")
+                  {
+                      arrEncuentroTablaHistogramaMesAprobado.push(new EncuentrosHistogramaMesAprobado(element.f, element.rango));
+                      arrEncuentroTablaHistogramaMesParetoAprobado.push(new EncuentrosHistogramaMesParetoAprobado(element.ht, element.rango));
+                  }
+                  if (element.tipo == "REGULAR")
+                  {
+                      arrEncuentroTablaHistogramaMesRegular.push(new EncuentrosHistogramaMesRegular(element.f, element.rango));
+                      arrEncuentroTablaHistogramaMesParetoRegular.push(new EncuentrosHistogramaMesParetoRegular(element.ht, element.rango));
+                  }
+
+
+
+             });
+             //console.log(arrEncuentroTablaTiemposBandeja);
+         });
+
+         //--------------------------------------------------------------------------------------- GRAFICOS PORCENTAJE DE REPROCESOS
+         var url = "/CONTROL/FunListarPorcentajeReprocesos";
+         $.get(url, { nombre: nombre, tipo: 'MES', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+                  //console.log(data);
+                  if (element.nombre_producto == nombre && element.valory > 0)
+                  {
+                     arrEncuentrosPorcentajeReprocesos.push(new EncuentrosPorcentajeReprocesos(element.valory, element.dia));
+                     arrEncuentrosPorcentajeReprocesosVO.push(new EncuentrosPorcentajeReprocesosVO(element.valor_objetivo, element.dia));
+                     //ordenar "label" que será el día
+                     //arrEncuentroTablaTiemposBandeja.sort(function (a, b) { return a.label - b.label });
+                  }
+
+             });
+             //console.log(arrEncuentroTablaTiemposBandeja);
+         });
+
+
+        //--------------------------------------------------------------------------------------- GRAFICOS HISTOGRAMA DE REPROCESOS
+         var url = "/CONTROL/FunListarHistogramasReprocesos";
+         $.get(url, { nombre: nombre, tipo: 'MES', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+
+                  if (element.nombrE_PRODUCTO == nombre)
+                  {
+                     arrEncuentrosHistogramaReprocesos.push(new EncuentrosHistogramaReprocesos(element.f, element.num));
+                     arrEncuentrosHistogramaReprocesosPareto.push(new EncuentrosHistogramaReprocesosPareto(element.ht, element.num));
+                     //ordenar "label" que será el día
+                     //arrEncuentroTablaTiemposBandeja.sort(function (a, b) { return a.label - b.label });
+                       //console.log(arrEncuentrosHistogramaReprocesos);
+                  }
+
+             });
+             //console.log(arrEncuentroTablaTiemposBandeja);
+         });
+
+
+          //-------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: PORCENTAJE ACUMULADO y sIGUIENTE
+         var url = "/CONTROL/FunListarCS";
+         $.get(url, { nombre: nombre, tipo: '', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+
+                  if (element.producto == nombre && element.descripcion == "% REPROCESOS-DIA")
+                  {
+                      arrEncuentrosReprocesosMes3.push(new EncuentrosReprocesosMes3(element.mes3, '@ViewBag.MES / @ViewBag.YEAR'));
+                      arrEncuentrosReprocesosMes2.push(new EncuentrosReprocesosMes2(element.mes2, '@ViewBag.MESDOS / @ViewBag.YEAR'));
+                      arrEncuentrosReprocesosMes1.push(new EncuentrosReprocesosMes1(element.mes1, '@ViewBag.MESUNO / @ViewBag.YEAR'));
+
+                  }
+
+             });
+           //console.log(arrEncuentrosReprocesosBarritas);
+         });
+
+
+
+          //-------------------------------- GRAFICOS DE BARRAS Pestaña CONTROL: NUMERO DE REPROCESOS DIARIO
+         var url = "/CONTROL/FunListarCantidadReprocesos";
+         $.get(url, { nombre: nombre, tipo: '', txtTras: '@ViewBag.txtTras' }, function (data) {
+
+              data.forEach(function (element) {
+
+                  if (element.nombre_producto == nombre && element.valory > 0)
+                  {
+                      arrEncuentrosCantidadReprocesos.push(new EncuentrosCantidadReprocesos(element.valory, element.dia));
+
+                  }
+
+             });
+           //console.log(arrEncuentrosCantidadReprocesos);
+         });
+
+
+         var url = "/CONTROL/FunListarReprocesosAcum";
+         $.get(url, { nombre: nombre, tipo: '', txtTras: '@ViewBag.txtTras' }, function (data) {
+             //console.log(data);
+              data.forEach(function (element) {
+
+                  if (element.nombre_producto == nombre)
+                  {
+                      arrEncuentrosReprocesosAcumulado.push(new EncuentrosReprocesosAcumulado(element.valory, element.mes_anio));
+                      arrEncuentrosReprocesosAcumulado.sort(function (a, b) { return a.label - b.label });
+
+                      //console.log(arrEncuentrosReprocesosAcumulado);
+                  }
+
+             });
+
+         });
+
+
+        CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+
+                "#006ec1",
+                "#009ee5",
+                "#52bcec",
+                "#89d1f3",
+                "#b5e5f9"
+
+                ]);
+
+        //-------- Gráfico grande Mensual
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+            axisX: {
+                interval: 1
+            },
+            axisY: {
+                scaleBreaks: {
+                    type: "wavy",
+                    customBreaks: [{
+                        startValue: 80,
+                        endValue: 210
+                    },
+                    {
+                        startValue: 230,
+                        endValue: 600
+                    }
+                    ]
+                }
+            },
+            data: [{
+                type: "bar",
+
+               dataPoints: arrEncuentroTablaTiemposBandeja
+
+
+            }]
+        });
+
+        chart.render();
+
+
+         //-------- Gráfico Oferta Aprobada
+         var chartA = new CanvasJS.Chart("chartContainerAprobada", {
+             animationEnabled: true,
+             colorSet: "greenShades",
+            axisX: {
+                interval: 1
+            },
+            axisY: {
+                scaleBreaks: {
+                    type: "wavy",
+                    customBreaks: [{
+                        startValue: 80,
+                        endValue: 210
+                    },
+                    ]
+                }
+            },
+            data: [{
+                type: "bar",
+
+                dataPoints: arrEncuentroTablaTiemposBandejaOfertaAprobada
+            }]
+        });
+
+        chartA.render();
+
+        //-------- Gráfico Oferta Regular
+        var chartR = new CanvasJS.Chart("chartContainerRegular", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+            axisX: {
+                interval: 1
+            },
+            axisY: {
+                scaleBreaks: {
+                    type: "wavy",
+                    customBreaks: [{
+                        startValue: 80,
+                        endValue: 210
+                    },
+                    ]
+                }
+            },
+            data: [{
+                type: "bar",
+
+                dataPoints: arrEncuentroTablaTiemposBandejaOfertaRegular
+            }]
+        });
+
+        chartR.render();
+
+        //-------- Gráfico Tiempos / perfil Mes
+
+        var chartPerfilMes = new CanvasJS.Chart("chartContainerPerfilMes", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+            axisX: {
+                interval: 1
+            },
+            axisY2: {
+                gridColor: "rgba(1,77,101,.1)"
+
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#519BDF",
+                dataPoints: arrEncuentroTablaTiemposBandejaPerfilMes
+            }]
+        });
+        chartPerfilMes.render();
+
+
+          //-------- Gráfico Tiempos / perfil aprobada
+
+        var chartPerfilAprobada = new CanvasJS.Chart("chartContainerPerfilAprobada", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+
+            axisX: {
+                interval: 1
+            },
+            axisY2: {
+
+                gridColor: "rgba(1,77,101,.1)"
+
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#519BDF",
+                dataPoints: arrEncuentroTablaTiemposBandejaPerfilAprobada
+            }]
+        });
+        chartPerfilAprobada.render();
+
+
+           //-------- Gráfico Tiempos / perfil regular
+
+        var chartPerfilRegular = new CanvasJS.Chart("chartContainerPerfilRegular", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+
+            axisX: {
+                interval: 1
+            },
+            axisY2: {
+                gridColor: "rgba(1,77,101,.1)",
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#519BDF",
+                dataPoints: arrEncuentroTablaTiemposBandejaPerfilRegular
+            }]
+        });
+        chartPerfilRegular.render();
+
+
+         //-------- Gráfico Histograma / desembolso
+
+        var chartHistograma = new CanvasJS.Chart("chatHistogramaDesembolso", {
+	            title:{
+		            text: "Histograma de Desembolso"
+	            },
+	            axisY: {
+
+		            lineColor: "#4F81BC",
+		            tickColor: "#4F81BC",
+		            labelFontColor: "#4F81BC"
+	            },
+	            axisY2: {
+
+		            suffix: "%",
+		            lineColor: "#C0504E",
+		            tickColor: "#C0504E",
+		            labelFontColor: "#C0504E"
+	            },
+	            data: [{
+		            type: "column",
+		            dataPoints: arrEncuentroTablaHistogramaMes
+	            }]
+            });
+            chartHistograma.render();
+            createPareto();
+
+            function createPareto() {
+
+	            chartHistograma.addTo("data",{type:"line", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentroTablaHistogramaParetoMes});
+	            chartHistograma.data[1].set("axisYType", "secondary", false);
+        }
+
+
+           //-------- Gráfico Histograma / desembolso OFERTA APROBADA
+
+        var chartHistogramaAprobado = new CanvasJS.Chart("chartHistogramaAprobado", {
+
+	            axisY: {
+
+		            lineColor: "#4F81BC",
+		            tickColor: "#4F81BC",
+		            labelFontColor: "#4F81BC"
+	            },
+	            axisY2: {
+
+		            suffix: "%",
+		            lineColor: "#C0504E",
+		            tickColor: "#C0504E",
+		            labelFontColor: "#C0504E"
+	            },
+	            data: [{
+		            type: "column",
+		            dataPoints: arrEncuentroTablaHistogramaMesAprobado
+	            }]
+            });
+            chartHistogramaAprobado.render();
+            createParetoAprobado();
+
+            function createParetoAprobado() {
+
+	            chartHistogramaAprobado.addTo("data",{type:"line", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentroTablaHistogramaMesParetoAprobado});
+	            chartHistogramaAprobado.data[1].set("axisYType", "secondary", false);
+        }
+
+
+          //-------- Gráfico Histograma / desembolso OFERTA REGULAR
+
+        var chartHistogramaRegular = new CanvasJS.Chart("chartHistogramaRegular", {
+
+	            axisY: {
+
+		            lineColor: "#4F81BC",
+		            tickColor: "#4F81BC",
+		            labelFontColor: "#4F81BC"
+	            },
+	            axisY2: {
+
+		            suffix: "%",
+		            lineColor: "#C0504E",
+		            tickColor: "#C0504E",
+		            labelFontColor: "#C0504E"
+	            },
+	            data: [{
+		            type: "column",
+		            dataPoints: arrEncuentroTablaHistogramaMesRegular
+	            }]
+            });
+            chartHistogramaRegular.render();
+            createParetoRegular();
+
+            function createParetoRegular() {
+
+	            chartHistogramaRegular.addTo("data",{type:"line", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentroTablaHistogramaMesParetoRegular});
+	            chartHistogramaRegular.data[1].set("axisYType", "secondary", false);
+        }
+
+         //-------- Gráfico de lineas Porcentaje de Reprocesos Díarios
+
+        var chartReproceso = new CanvasJS.Chart("chartReprocesoDiario", {
+            animationEnabled: true,
+
+            axisX: {
+                interval: 1,
+                valueFormatString: "DD MMM,YY"
+            },
+            axisY: {
+                includeZero: false,
+                suffix: " %"
+            },
+            legend: {
+                cursor: "pointer",
+                fontSize: 16,
+                itemclick: toggleDataSeries
+            },
+            toolTip: {
+                shared: true
+            },
+            data: [{
+                name: "% Reprocesos",
+                type: "spline",
+                yValueFormatString: "##,## %",
+                showInLegend: true,
+                dataPoints: arrEncuentrosPorcentajeReprocesos
+            },
+            {
+                name: "Valor Objetivo",
+                type: "spline",
+                yValueFormatString: "##,## %",
+                showInLegend: true,
+                dataPoints: arrEncuentrosPorcentajeReprocesosVO
+            },
+            ]
+        });
+        chartReproceso.render();
+
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            }
+            else {
+                e.dataSeries.visible = true;
+            }
+            chartReproceso.render();
+        }
+
+
+
+         //-------- Gráfico Histograma / Reprocesos
+
+        var chartHistogramaReprocesos = new CanvasJS.Chart("chatHistogramaReprocesos", {
+	            title:{
+		            text: "Histograma de Reprocesos"
+	            },
+	            axisY: {
+
+		            lineColor: "#4F81BC",
+		            tickColor: "#4F81BC",
+		            labelFontColor: "#4F81BC"
+	            },
+	            axisY2: {
+
+		            suffix: "%",
+		            lineColor: "#C0504E",
+		            tickColor: "#C0504E",
+		            labelFontColor: "#C0504E"
+	            },
+	            data: [{
+		            type: "column",
+		            dataPoints: arrEncuentrosHistogramaReprocesos
+	            }]
+            });
+            chartHistogramaReprocesos.render();
+            createParetoReprocesos();
+
+            function createParetoReprocesos() {
+
+	            chartHistogramaReprocesos.addTo("data",{type:"line", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentrosHistogramaReprocesosPareto});
+	            chartHistogramaReprocesos.data[1].set("axisYType", "secondary", false);
+        }
+
+
+
+
+        var chartReprocesoLast = new CanvasJS.Chart("chartReprocesoMes3", {
+            animationEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+
+            axisY: {
+                title: "%"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "lightblue",
+                legendText: "% de Reprocesos",
+                dataPoints: arrEncuentrosReprocesosMes3
+            }]
+        });
+        chartReprocesoLast.render();
+
+
+        var chartReprocesoLast3 = new CanvasJS.Chart("chartReprocesoUltimosTres", {
+            animationEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+
+
+            axisY: {
+                title: "%"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "lightblue",
+                legendText: "% de Reprocesos",
+                dataPoints: arrEncuentrosReprocesosMes1
+            }]
+        });
+        chartReprocesoLast3.render();
+
+        createMes3();
+        createMes2();
+       
+        
+
+        function createMes2() {
+
+            chartReprocesoLast3.addTo("data", { type: "column", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentrosReprocesosMes2 });
+            chartReprocesoLast3.data[1].set("axisYType", "secondary", false);
+        }
+        function createMes3() {
+
+            chartReprocesoLast3.addTo("data", { type: "column", yValueFormatString: "0.##\"%\"", dataPoints: arrEncuentrosReprocesosMes3 });
+            chartReprocesoLast3.data[1].set("axisYType", "secondary", false);
+        }
+
+
+
+
+         //-------- Gráfico Cantidad de Reprocesos Acumulado
+
+        var chartReprocesoCantidad = new CanvasJS.Chart("chartReprocesoDiarioCantidad", {
+            animationEnabled: true,
+            axisX: {
+                interval: 1,
+                valueFormatString: "DD MMM,YY"
+            },
+            axisY: {
+                includeZero: false
+            },
+            legend: {
+                cursor: "pointer",
+                fontSize: 16
+            },
+            toolTip: {
+                shared: true
+            },
+            data: [{
+                name: "Expedientes Reprocesos (Total)",
+                type: "spline",
+                yValueFormatString: "##",
+                showInLegend: true,
+                dataPoints: arrEncuentrosCantidadReprocesos
+            }
+            ]
+        });
+        chartReprocesoCantidad.render();
+
+
+        var chartReprocesosAcumulado = new CanvasJS.Chart("chartReprocesosAcumulado", {
+
+            animationEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+            data: [{
+                type: "column", //change type to bar, line, area, pie, etc
+                //indexLabel: "{y}", //Shows y value on all Data Points
+                indexLabelFontColor: "#5A5757",
+                indexLabelPlacement: "outside",
+                dataPoints: arrEncuentrosReprocesosAcumulado
+            }]
+        });
+        chartReprocesosAcumulado.render();
+
+
+    }
+
+
+    function CbosTablaDinamica()
+    {
+
+        var producto = $('.nav-tabs .active').text()
+        console.log(producto);
+
+        var tipo = $('#cboTipo').val();
+        console.log(tipo);
+
+        funTablaDinamica(producto, tipo);
+    }
+
+
+    function funTablaDinamica(nombre, tipo) {
+
+        var tipo = $('#cboTipo').val();
+
+        var resul = 'TOTAL';
+
+        $('#tbTerritoriosName').remove();
+        $('#tbDiarioTerritorio').remove();
+        $('#tbTerritorioTotal').remove();
+
+         //--------------------------------------------------------------------------------------- Tabla Dinamica
+         var url = "/CONTROL/FunListarTablaDinamica";
+         $.get(url, { nombre: nombre, tipo: tipo, resul: resul }, function (dataDinamica) {
+
+             var cabecera = "";
+             var cuerpo = "";
+             var pie = "";
+             var cabeceratotal = "";
+             var pietotal = "";
+        //---------------------------------------------------------------------------- CABEZERA
+        cabecera = '<thead >';
+        cabecera = cabecera + '<tr>';
+        //cabecera = cabecera + '<th>.</th>';
+        cabecera = cabecera + '<th>.</th>';
+        cabecera = cabecera + '</tr></thead>';
+
+        cabecera = cabecera + '<thead>';
+        cabecera = cabecera + '<tr>';
+        //cabecera = cabecera + '<th>Codigo</th>';
+        cabecera = cabecera + '<th>Nombre de Territorio</th>';
+        cabecera = cabecera + '</tr></thead>';
+
+             dataDinamica.forEach(function (element) {
+
+                 cabecera = cabecera + '<tr>';
+                 cabecera = cabecera + '<td style="color: green;cursor:pointer" data-toggle="modal" data-target="#largeModal" onclick="funTablaDinamicaDetalle(`'+ element.producto +'`,`'+ element.territorio +'`);">' + element.territorio + '</td>';
+                 cabecera = cabecera + '</tr>';
+                 //---------------------------------------------------------------------------- CUERPO
+
+             });
+
+        cabecera = cabecera + '<thead>';
+        cabecera = cabecera + '<tr>';
+        cabecera = cabecera + '<th>Total</th>';
+        cabecera = cabecera + '</tr></thead>';
+
+        $('#pnlTerritorios').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbTerritoriosName" >' + cabecera + '</table>').fadeIn(300000);
+        //----------------------------------------------------------------------------
+
+        //--------------------------------------------- CUERPO CABEZERA
+         cuerpo = '<thead>';
+         cuerpo = cuerpo + '<tr>';
+
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+
+                //console.log(dia);
+                //console.log(vDiaAC);
+
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+
+
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+                    cuerpo = cuerpo + '<th>' + Sem_dia + '</th>';
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr>';
+
+
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + dia + '</th>';
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            //--------------------------------------------- CUERPO INFORMACION
+
+             //var longitudTabla = dataDinamica.length;
+             var contador = 1;
+
+            cuerpo = cuerpo + '<tbody>';
+
+             dataDinamica.forEach(function (element) {
+
+                cuerpo = cuerpo + '<tr>';
+                for (i = 0; i < 31; i++) {
+
+                    var dia = i + 1;
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    
+                    if ((Sem_dia != "dom") && vDiaAC >= dia)
+                    {
+                        var campoValor = "element.dia" + dia;
+
+                        var campoSuma = campoValor + '-' + contador; // element.dia1-1, element.dia1-2, etc
+
+                        cuerpo = cuerpo + '<td style="color: blue" id="'+ campoSuma + '">'
+
+                        if (eval(campoValor) >= 0) {
+
+                            cuerpo = cuerpo + eval(campoValor);
+                            //cuerpo = cuerpo + '<small style="color: blue" id="'+ campoSuma + '">' + eval(campoValor) + '</small>';
+                        }
+                        else {
+                            cuerpo = cuerpo + eval(campoValor);
+                            //cuerpo = cuerpo + '<small style="color: blue" id="'+ campoSuma + '">' + eval(campoValor) + '</small>';
+                        }
+                        cuerpo = cuerpo + '</td>';
+                    }
+                 }
+
+                contador = contador + 1;
+                cuerpo = cuerpo + '</tr>';
+             });
+             cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlDiarioTerritorio').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioTerritorio" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+             var sumDiario = 0;
+
+             pie = pie + '<tfoot>';
+             pie = pie + '<tr>';
+
+             for (i = 0; i < 31; i++) {
+
+                 var dia = i + 1; //1-31
+
+                 var Sem_dia = diaSemanaP(dia, vMes, vAno);
+
+                 if ((Sem_dia != "dom") && vDiaAC >= dia) {
+
+                     //console.log(dia); //1-31
+
+                     if (dia <= 31) {
+
+                         //console.log(contador); 13
+
+                         for (j = 1; j < contador; j++) {
+
+                             sumDiario = 0;
+
+                             $('td[id*="element.dia' + dia + '-"]').each(function () {
+                                 sumDiario += Number($(this).text()) || 0;
+                             });
+
+                         /*console.log(dia);*/ // imprimira 12 veces cada dia
+
+                         }
+
+                         pie = pie + '<th>' + sumDiario + '</th>'; //adjuntamos el pie de la tabla con su valor sumado.
+
+                     } else { console.log("CHAU"); }
+                 }
+             }
+
+             pie = pie + '</tr>';
+             pie = pie + '</tfoot>';
+
+             $('#tbDiarioTerritorio').append(pie);
+
+
+          //--------------------------------------------------------------------------------------- TABLA TOTALES
+
+             var contadorTotal = 1;
+             var sumaTotales = 0;
+
+             cabeceratotal = '<thead >';
+             cabeceratotal = cabeceratotal + '<tr>';
+             //cabeceratotal = cabeceratotal + '<th>.</th>';
+             cabeceratotal = cabeceratotal + '<th>.</th>';
+             cabeceratotal = cabeceratotal + '</tr></thead>';
+
+             cabeceratotal = cabeceratotal + '<thead>';
+             cabeceratotal = cabeceratotal + '<tr>';
+             //cabeceratotal = cabeceratotal + '<th>Codigo</th>';
+             cabeceratotal = cabeceratotal + '<th>Total</th>';
+             cabeceratotal = cabeceratotal + '</tr></thead>';
+
+
+             dataDinamica.forEach(function (element) {
+
+                 cabeceratotal = cabeceratotal + '<tr>';
+                 //cabecera = cabecera + '<td> <small style="color: blue">' + element2.codigo + '</small></td>';
+                 cabeceratotal = cabeceratotal + '<td style="color: green" id="total-' + contadorTotal + '">' + element.total + '</td>';
+                 cabeceratotal = cabeceratotal + '</tr>';
+
+
+                 contadorTotal = contadorTotal + 1;
+             });
+
+             $('#pnlTerritorioTotal').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbTerritorioTotal" >' + cabeceratotal + '</table>').fadeIn(300000);
+
+             $('td[id*="total-"]').each(function () {
+
+                 sumaTotales += Number($(this).text()) || 0;
+
+             });
+
+             pietotal = '<tfoot>';
+             pietotal = pietotal + '<tr>';
+             pietotal = pietotal + '<th>' + sumaTotales + '</th>';
+             pietotal = pietotal + '</tr></tfoot>';
+
+             $('#tbTerritorioTotal').append(pietotal);
+
+         });
+
+
+
+    }
+
+    function funTablaDinamicaDetalle(producto, territorio)
+    {
+
+        var territoryName = territorio;      
+        var nombreProducto = producto;
+
+        $('#TerritorioLabel').text("Territorio: " + territoryName);
+
+        //console.log(nombreProducto);
+        //console.log(territoryName);
+
+        var tipo = $('#cboTipo').val();
+        var resul = 'INGRESADOS EN EL DIA';
+
+        $('#tbTerritoryOficinas').remove();
+        $('#tbTerritoryOficinasDetalle').remove();
+        $('#tbTerritoryOficinasTotal').remove();  
+
+         //--------------------------------------------------------------------------------------- Tabla Dinamica Detalle
+
+        var url = "/CONTROL/FunListarTablaDinamica";
+        $.get(url, { nombre: nombreProducto, tipo: tipo, resul: resul, sector: territoryName }, function (dataDinamicaDetalle) {
+
+            var cabecera_detalle = "";
+            var cuerpo_detalle = "";
+            var cabeceratotal_detalle = "";
+
+             //console.log(dataDinamicaDetalle);
+             //---------------------------------------------------------------------------- CABEZERA DETALLE
+            cabecera_detalle = '<thead >';
+            cabecera_detalle = cabecera_detalle + '<tr>';
+            cabecera_detalle = cabecera_detalle + '<th>.</th>';
+            cabecera_detalle = cabecera_detalle + '<th>.</th>';
+            cabecera_detalle = cabecera_detalle + '</tr></thead>';
+
+            cabecera_detalle = cabecera_detalle + '<thead>';
+            cabecera_detalle = cabecera_detalle + '<tr>';
+            cabecera_detalle = cabecera_detalle + '<th>Oficina</th>';
+            cabecera_detalle = cabecera_detalle + '<th>Oferta</th>';
+            cabecera_detalle = cabecera_detalle + '</tr></thead>';
+
+
+              dataDinamicaDetalle.forEach(function (element) {
+
+                 cabecera_detalle = cabecera_detalle + '<tr>';
+                 cabecera_detalle = cabecera_detalle + '<td style="color: green;cursor:pointer">' + element.oficina + '</td>';
+                 cabecera_detalle = cabecera_detalle + '<td style="color: green;cursor:pointer">' + element.nombre_tipo_oferta + '</td>';
+                 cabecera_detalle = cabecera_detalle + '</tr>';
+                 //---------------------------------------------------------------------------- CUERPO
+
+             });
+
+            $('#pnlTerritoriosDetalle').append('<table class="table table-striped table-hover m-b-0" style="font-size:10px;" id="tbTerritoryOficinas" >' + cabecera_detalle + '</table>').fadeIn(300000);
+
+            //----------------------------------------------------------------------------
+
+        //--------------------------------------------- CUERPO DETALLE CABEZERA
+         cuerpo_detalle = '<thead>';
+         cuerpo_detalle = cuerpo_detalle + '<tr>';
+
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+
+                //console.log(dia);
+                //console.log(vDiaAC);
+
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+
+
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+                    cuerpo_detalle = cuerpo_detalle + '<th>' + Sem_dia + '</th>';
+                }
+            }
+            cuerpo_detalle = cuerpo_detalle + '</tr>';
+            cuerpo_detalle = cuerpo_detalle + '</thead>';
+
+            cuerpo_detalle = cuerpo_detalle + '<thead>';
+            cuerpo_detalle = cuerpo_detalle + '<tr>';
+
+
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo_detalle = cuerpo_detalle + '<th>' + dia + '</th>';
+                }
+            }
+            cuerpo_detalle = cuerpo_detalle + '</tr>';
+            cuerpo_detalle = cuerpo_detalle + '</thead>';
+
+
+             //--------------------------------------------- CUERPO DETALLE INFORMACION                 
+
+            cuerpo_detalle = cuerpo_detalle + '<tbody>';
+
+             dataDinamicaDetalle.forEach(function (element) {
+
+                 cuerpo_detalle = cuerpo_detalle + '<tr>';
+
+                for (i = 0; i < 31; i++) {
+
+                    var dia = i + 1;
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    
+                    if ((Sem_dia != "dom") && vDiaAC >= dia)
+                    {
+                        var campoValor = "element.dia" + dia;                      
+
+                        cuerpo_detalle = cuerpo_detalle + '<td style="color: blue">'
+
+                        if (eval(campoValor) >= 0) {
+
+                            cuerpo_detalle = cuerpo_detalle + eval(campoValor);
+                            //cuerpo = cuerpo + '<small style="color: blue" id="'+ campoSuma + '">' + eval(campoValor) + '</small>';
+                        }
+                        else {
+                            cuerpo_detalle = cuerpo_detalle + eval(campoValor);
+                            //cuerpo = cuerpo + '<small style="color: blue" id="'+ campoSuma + '">' + eval(campoValor) + '</small>';
+                        }
+                        cuerpo_detalle = cuerpo_detalle + '</td>';
+                    }
+                 }
+
+                //contador = contador + 1;
+                cuerpo_detalle = cuerpo_detalle + '</tr>';
+             });
+            cuerpo_detalle = cuerpo_detalle + '</tbody>';
+
+
+            //--------------------------------------------- TOTALES DETALLE INFORMACION    
+
+            $('#pnlDiarioTerritorioDetalle').append('<table class="table table-hover m-b-0" style="font-size:10px;" id="tbTerritoryOficinasDetalle" >' + cuerpo_detalle + '</table>').fadeIn(300000);//.innerHTML();
+
+
+            cabeceratotal_detalle = '<thead >';
+            cabeceratotal_detalle = cabeceratotal_detalle + '<tr>';
+            cabeceratotal_detalle = cabeceratotal_detalle + '<th>.</th>';            
+            cabeceratotal_detalle = cabeceratotal_detalle + '</tr></thead>';
+
+            cabeceratotal_detalle = cabeceratotal_detalle + '<thead>';
+            cabeceratotal_detalle = cabeceratotal_detalle + '<tr>';            
+            cabeceratotal_detalle = cabeceratotal_detalle + '<th>Total</th>';
+            cabeceratotal_detalle = cabeceratotal_detalle + '</tr></thead>';
+
+
+             dataDinamicaDetalle.forEach(function (element) {
+
+                 cabeceratotal_detalle = cabeceratotal_detalle + '<tr>';                 
+                 cabeceratotal_detalle = cabeceratotal_detalle + '<td style="color: green">' + element.total + '</td>';
+                 cabeceratotal_detalle = cabeceratotal_detalle + '</tr>';
+                 
+             });
+
+             $('#pnlTerritorioTotalDetalle').append('<table class="table table-hover m-b-0" style="font-size:10px;" id="tbTerritoryOficinasTotal" >' + cabeceratotal_detalle + '</table>').fadeIn(300000);
+
+
+
+        });
+
+    }
+
+
+
+</script>
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Controles </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Controles</li>
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<body>
+
+    <div class="card" id="MenuTabs">
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" id="linkPLD" onclick="funControles('PRESTAMO DE LIBRE DISPONIBILIDAD');funTablaDinamica('PRESTAMO DE LIBRE DISPONIBILIDAD')" style="cursor:pointer" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkTC" onclick="funControles('TARJETA DE CREDITO');funTablaDinamica('TARJETA DE CREDITO')" style="cursor:pointer" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkConvenio" onclick="funControles('CONVENIO');funTablaDinamica('CONVENIO')" style="cursor:pointer" aria-expanded="false">CONVENIO</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+
+
+    <div class="tab-content">
+
+        <div id="home" class="tab-pane active">
+
+
+            <div class="row clearfix">
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Grafico</strong> Tiempo de Atencion por Bandeja / Mes: @ViewBag.MES - Año: @ViewBag.YEAR</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tiempo Oferta Aprobada</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainerAprobada" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tiempo Oferta Regular</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainerRegular" style="height: 300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+
+
+            <div class="row">
+
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tiempos</strong> Atención / Perfil / Mes: @ViewBag.MES - Año: @ViewBag.YEAR</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainerPerfilMes" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tiempos/Perfil Oferta Aprobada</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainerPerfilAprobada" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tiempos/Perfil Oferta Regular</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartContainerPerfilRegular" style="height: 300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                         
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Histograma</strong> de Formalizacion de Prestamo / Mes: @ViewBag.MES - Año: @ViewBag.YEAR</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chatHistogramaDesembolso" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Histograma Desembolso Oferta Aprobada</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartHistogramaAprobado" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Histograma Desembolso Oferta Regular</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartHistogramaRegular" style="height: 300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Porcentaje</strong> de Reproceso - Diario / Mes: @ViewBag.MES - Año: @ViewBag.YEAR</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartReprocesoDiario" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Porcentaje Acumulado </strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartReprocesoMes3" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Porcentaje de Reproceso Mensual</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartReprocesoUltimosTres" style="height: 300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Histograma</strong> de Reprocesos / Mes: @ViewBag.MES - Año: @ViewBag.YEAR</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chatHistogramaReprocesos" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Numero de Reprocesos - Diario </strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartReprocesoDiarioCantidad" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Numero de Reprocesos - Acumulado</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartReprocesosAcumulado" style="height: 300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row clearfix">
+
+
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Seleccione Tipo</strong></h2>
+                        </div>
+
+                        <div class="body">
+                            <div class="col-md-2 col-sm-12">
+                                <div class="form-group">
+
+                                    <div class="row">
+                                        <select title="-- TIPO --" id="cboTipo" onchange="CbosTablaDinamica();" class="form-control show-tick" tabindex="-98">
+                                            <option selected value="REPROCESO">REPROCESO</option>
+                                            <option value="PROCESADOS">PROCESADOS</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row clearfix">
+
+                <div class="col-md-3">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Etiquetas de Fila</strong></h2>
+                        </div>
+
+                        <div class="body">
+                            <div class="table-responsive" id="pnlTerritorios">
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-7">
+
+                    <div class="card parents-list">
+
+                        <div class="header">
+                            <h2><strong>Suma de reprocesos diario</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive" id="pnlDiarioTerritorio">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>TOTAL</strong></h2>
+
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive" id="pnlTerritorioTotal">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" data-backdrop="false" id="largeModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div class="modal-dialog modal-xl" role="list">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title" id="TerritorioLabel">Nombre de Territorio Label</h4>
+                </div>
+                <div class="modal-body" style="height:auto;width:auto">
+
+                    <div class="row clearfix">
+
+                        <div class="col-md-4">
+                            <div class="card parents-list">
+                                <div class="header">
+                                    <h2><strong>Etiquetas de Fila</strong></h2>
+                                </div>
+
+                                <div class="body">
+                                    <div class="table-responsive" id="pnlTerritoriosDetalle">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-7">
+
+                            <div class="card parents-list">
+
+                                <div class="header">
+                                    <h2><strong>Suma de reprocesos diario</strong></h2>
+
+                                </div>
+                                <div class="body">
+                                    <div class="table-responsive" id="pnlDiarioTerritorioDetalle">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-1">
+                            <div class="card parents-list">
+                                <div class="header">
+                                    <h2><strong>T</strong></h2>
+
+                                </div>
+                                <div class="body">
+                                    <div class="table-responsive" id="pnlTerritorioTotalDetalle">
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-round waves-effect" hidden>SAVE CHANGES</button>
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CERRAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+    @*<script src="~/assets/bundles/libscripts.bundle.js"></script>
+        <script src="~/assets/bundles/vendorscripts.bundle.js"></script>
+        <script src="~/assets/bundles/mainscripts.bundle.js"></script>*@
+
+</body>
+

@@ -1,0 +1,1905 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    table tbody tr td {
+        font-size: 12px;
+    }
+</style>
+
+<script>
+
+    var vMes = '@ViewBag.MES';
+    var vAno = '@ViewBag.YEAR';
+    var vDiaAC = '@ViewBag.DAY';
+    var vUsuario = '@ViewBag.Usuario';
+
+    console.log(vDiaAC);
+    console.log(vMes);
+    console.log(vAno);
+
+    console.log(vUsuario);
+
+    function diaSemanaP(dia, mes, anio) {
+        var dias = ["dom", "lun", "mar", "mie", "jue", "vie", "sab"];
+        var dt = new Date(mes + ' ' + dia + ', ' + anio + ' 12:00:00');
+
+        //console.log(dt);
+        return dias[dt.getUTCDay()]
+    };
+
+    function load() {
+
+        funDiario('PRESTAMO DE LIBRE DISPONIBILIDAD');
+        //console.log('@ViewBag.MES');
+    };
+    window.onload = load;
+
+    function funDiario(nombre) {
+
+        $('#tbDiario').remove();
+        $('#tbDiarioCMI').remove();
+
+        $('#tbMensual').remove();
+        $('#tbMensualCMI').remove();
+
+        ////--------------------- FUVEX
+        $('#tbDiarioFUVEX').remove();
+        $('#tbDiarioCMIFUVEX').remove();
+
+        $('#tbMensualFUVEX').remove();
+        $('#tbMensualCMIFUVEX').remove();
+
+
+        //---------------------------- GIFOLE
+
+        $('#tbDiarioGifole').remove();
+        $('#tbDiarioCMIGifole').remove();
+
+        $('#tbMensualGifole').remove();
+        $('#tbMensualCMIGifole').remove();
+
+
+        var url = "/PLD_TC_CONVENIO/FunListarCS";
+        $.get(url, { nombre : nombre , tipo : '@ViewBag.tipo', trans : '@ViewBag.txtTras' }, function (data) {
+
+            //console.log(data);
+
+            var cabecera = "";
+            var cuerpo = "";
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            //style="background-color:blue; color:white"
+            cabecera = '<thead >';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>. </th>';
+            cabecera = cabecera + '<th> </th>';
+            cabecera = cabecera + '</tr></thead>';
+
+            cabecera = cabecera + '<thead>';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>Indicador</th>';
+            cabecera = cabecera + '<th>V.O.</th>';
+            cabecera = cabecera + '</tr></thead>';
+
+
+            data.forEach(function (element) {
+
+                //console.log(element);
+                //console.log(element.codigo);
+
+                cabecera = cabecera + '<tr>';
+                cabecera = cabecera + '<td> <small style="color: blue">' + element.descripcion + '</small></td>';
+                cabecera = cabecera + '<td> <small style="color: green">' + element.valor_objetivo + '</small> </td>';
+                cabecera = cabecera + '</tr>';
+
+                  //console.log(cabecera);
+
+            });
+
+            $('#pnlDiario').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiario" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            //----------------------------------------------------------------------------
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+
+                //console.log(dia);
+                //console.log(vDiaAC);
+
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + Sem_dia + '</th>';
+
+
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + dia + '</th>';
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+                cuerpo = cuerpo + '<tr>';
+                for (i = 0; i < 31; i++) {
+
+                    var dia = i + 1;
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                    if ((Sem_dia != "dom") && vDiaAC >= dia)
+                    {
+                        var campo = "element.dia" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+
+                        var link = "";
+
+                         if (element.descripcion == "PORCENTAJE DE REPROCESOS GLOBAL") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 26) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        //console.log(valorObjetivo);
+
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB") {
+
+                            if (Number(valor) > 2) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > Number(valorObjetivo) && Number(valor) < 2) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 0.1 && Number(valor) <= 1) {
+                           
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+
+                        }
+
+
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB") {
+
+                            if (Number(valor) >= Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                                                          
+                            }
+                            else if (Number(valor) >= 2.5 && Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";                                
+                            }
+                            else if (Number(valor) < 2.5) {      
+                                    
+                                  claseA = "color: green";
+                                claseI = "far fa-circle";   
+
+                            }
+
+                        }
+
+                        if (element.descripcion == "% REPROCESOS-DIA") {
+
+                            if (Number(valor) > 52) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) < 50) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 50 && Number(valor) <= 52) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        if (element.descripcion == "ANS - Efectividad") {
+
+                            if (Number(valor) < 60) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > 80) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 60 && Number(valor) <= 80) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        if (element.descripcion == "% FORMALIZACION") {
+
+                            if (Number(valor) < 40) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 40 && Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                        cuerpo = cuerpo + '<td>'
+                        
+
+                        if (element.descripcion == "% REPROCESOS-DIA")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=UTILES-LAB'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=UTILES-LAB'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=UTILES-LAB' + '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=UTILES-LAB' + '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI +  '" style="' + claseA + '" > </i>  ';
+                            
+
+                            cuerpo = cuerpo + '<a href="' + link + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + link + '" class="' + claseA + '">' + '-' + '</a>';
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+                    }
+                }
+
+                cuerpo = cuerpo + '</tr>';
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlDiarioCMI').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioCMI" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            $('#pnlMensual').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensual" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr style="line-height: 16px;">';
+
+            var theMonths = ["Ene", "Feb", "Mar", "Abr", "May",
+                "Jun", "Jul", "Agos", "Set", "Oct", "Nov", "Dic"];
+
+            var totalMes = theMonths.length;
+            var MesReal = vMes - 1; // porque Javascript cuenta los meses desde 0, Enero es 0, Febrero es 1, etc...
+
+            var todayDay = new Date(vAno, MesReal, vDiaAC);
+            todayDay.setMonth(todayDay.getMonth() - 2);
+            var mesBack = todayDay.getMonth();
+
+            for (i = 0; i < 3; i++) {
+
+                var mesNombre = theMonths[mesBack];
+
+                if (mesBack == totalMes) {
+
+                    mesBack = 0;
+                    cuerpo = cuerpo + '<th>' + 'Ene' + '</th>';
+                    mesBack++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesNombre + '</th>';
+                    mesBack++;
+                }
+            };
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr style="line-height: 16px;">';
+
+            var todayDay2 = new Date(vAno, MesReal, vDiaAC);
+
+            todayDay2.setMonth(todayDay2.getMonth() - 2);
+
+            var mesBack2 = todayDay2.getMonth() + 1;
+
+            for (i = 0; i < 3; i++) {
+
+                if (mesBack2 == totalMes) {
+
+                    mesBack2 = 0;
+                    cuerpo = cuerpo + '<th>' + '12' + '</th>';
+                    mesBack2++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesBack2 + '</th>';
+                    mesBack2++;
+                }
+            }
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+
+                cuerpo = cuerpo + '<tr style="line-height: 5px;">';
+
+                var mesA = Number(vMes) - 3;
+
+                for (i = 0; i < 3; i++) {
+
+                    var dia = i + 1;
+
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    if (vDiaAC >= dia) {
+
+                        mesA++;
+
+                        var campo = "element.mes" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+
+                        var linkUpdate = "";
+                        var linkMes = "";
+
+                        if (element.descripcion == "PORCENTAJE DE REPROCESOS GLOBAL") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 26) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+
+                            else if (Number(valor) < 0.5) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 0.5 && Number(valor) <= 1) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) <= 2.5) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 2.6 && Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                       if (element.descripcion == "% REPROCESOS-DIA") {
+
+                            if (Number(valor) > 52) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) < 50) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 50 && Number(valor) <= 52) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                          if (element.descripcion == "ANS - Efectividad") {
+
+                            if (Number(valor) < 60) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > 80) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) > 60 && Number(valor) < 80) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }
+                        if (element.descripcion == "% FORMALIZACION") {
+
+                            if (Number(valor) < 40) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 40 && Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                        cuerpo = cuerpo + '<td>'
+                        
+
+                        @*if (element.descripcion == "% REPROCESOS-DIA")
+                        {
+                            linkMes = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                        }*@
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB")
+                        {                        
+
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=APROBADO-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=APROBADO-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB")
+                        {
+                           //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=REGULAR-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=REGULAR-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI + '" style="' + claseA + '" > </i>  ';                            
+
+                            cuerpo = cuerpo + '<a href="' + linkMes + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + linkMes + '" class="' + claseA + '">' + '-' + '</a>';
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+                    }
+
+                }
+
+                //linkUpdate = 'http://localhost:5000/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+                linkUpdate = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+
+                if (vUsuario != "") {
+
+                //--------------------- BOTON EDITAR
+                cuerpo = cuerpo + '<td>';
+                //cuerpo = cuerpo + '<a class="badge badge-info" style="cursor:pointer" href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i>Editar indicadores</a>';
+                cuerpo = cuerpo + '<a style="cursor:pointer"  href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i></a>';
+                cuerpo = cuerpo + '</td>';
+
+                }
+
+                cuerpo = cuerpo + '</tr>';
+
+
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlMensualCMI').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensualCMI" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+        });
+
+
+
+        //------------------------------------------------------------------------------------------- FUVEX
+
+        var url = "/PLD_TC_CONVENIO/FunListarFUVEX";
+        $.get(url, { nombre : nombre , tipo : '@ViewBag.tipo', trans : '@ViewBag.txtTras' }, function (data) {
+
+            //console.log(data);
+
+            var cabecera = "";
+            var cuerpo = "";
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            //style="background-color:blue; color:white"
+            cabecera = '<thead >';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>. </th>';
+            cabecera = cabecera + '<th> </th>';
+            cabecera = cabecera + '</tr></thead>';
+
+            cabecera = cabecera + '<thead>';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>Indicador</th>';
+            cabecera = cabecera + '<th>V.O.</th>';
+            cabecera = cabecera + '</tr></thead>';
+
+
+            data.forEach(function (element) {
+
+                //console.log(element);
+                //console.log(element.codigo);
+
+                cabecera = cabecera + '<tr>';
+                cabecera = cabecera + '<td> <small style="color: blue">' + element.descripcion + '</small></td>';
+                cabecera = cabecera + '<td> <small style="color: green">' + element.valor_objetivo + '</small> </td>';
+                cabecera = cabecera + '</tr>';
+
+                  //console.log(cabecera);
+
+            });
+
+            $('#pnlDiarioFUVEX').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioFUVEX" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            //----------------------------------------------------------------------------
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+
+                //console.log(dia);
+                //console.log(vDiaAC);
+
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + Sem_dia + '</th>';
+
+
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + dia + '</th>';
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+                cuerpo = cuerpo + '<tr>';
+                for (i = 0; i < 31; i++) {
+
+                    var dia = i + 1;
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                    if ((Sem_dia != "dom") && vDiaAC >= dia)
+                    {
+                        var campo = "element.dia" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+                        var linkUpdate = "";
+                        var link = "";
+
+                         if (element.descripcion == "TIEMPO DE FORMALIZACION OF. APROBADA") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        //console.log(valorObjetivo);
+
+                        if (element.descripcion == "TIEMPO DE FORMALIZACION OF. REGULAR") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+
+                        if (element.descripcion == "PAPERLESS TIEMPO DE FORMALIZACION OF. APROBADA") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                        if (element.descripcion == "PORCENTAJE REPROCESOS FUVEX") {
+
+                            if (Number(valor) > 15) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > Number(valorObjetivo) && Number(valor) <= 15) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                       if (element.descripcion == "PORCENTAJE EN LA FORMALIZACION FUNNEL") {
+
+                            if (Number(valor) < 55) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) >= Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 55 && Number(valor) <= 69) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+
+                        cuerpo = cuerpo + '<td>'
+                        
+
+                        if (element.descripcion == "% REPROCESOS-DIA")
+                        {
+                            link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB")
+                        {
+                            link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO' + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+                         if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB")
+                        {
+                            link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR' + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI +  '" style="' + claseA + '" > </i>  ';                            
+
+                            cuerpo = cuerpo + '<a href="' + link + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + link + '" class="' + claseA + '">' + '-' + '</a>';
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+                    }
+                }
+
+                cuerpo = cuerpo + '</tr>';
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlDiarioCMIFUVEX').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioCMIFUVEX" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            $('#pnlMensualFUVEX').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensualFUVEX" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr>';
+
+            var theMonths = ["Ene", "Feb", "Mar", "Abr", "May",
+                "Jun", "Jul", "Agos", "Set", "Oct", "Nov", "Dic"];
+
+            var totalMes = theMonths.length;
+            var MesReal = vMes - 1; // porque Javascript cuenta los meses desde 0, Enero es 0, Febrero es 1, etc...
+
+            var todayDay = new Date(vAno, MesReal, vDiaAC);
+            todayDay.setMonth(todayDay.getMonth() - 2);
+            var mesBack = todayDay.getMonth();
+
+            for (i = 0; i < 3; i++) {
+
+                var mesNombre = theMonths[mesBack];
+
+                if (mesBack == totalMes) {
+
+                    mesBack = 0;
+                    cuerpo = cuerpo + '<th>' + 'Ene' + '</th>';
+                    mesBack++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesNombre + '</th>';
+                    mesBack++;
+                }
+            };
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr>';
+
+            var todayDay2 = new Date(vAno, MesReal, vDiaAC);
+
+            todayDay2.setMonth(todayDay2.getMonth() - 2);
+
+            var mesBack2 = todayDay2.getMonth() + 1;
+
+            for (i = 0; i < 3; i++) {
+
+                if (mesBack2 == totalMes) {
+
+                    mesBack2 = 0;
+                    cuerpo = cuerpo + '<th>' + '12' + '</th>';
+                    mesBack2++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesBack2 + '</th>';
+                    mesBack2++;
+                }
+            }
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+
+                cuerpo = cuerpo + '<tr>';
+
+                var mesA = Number(vMes) - 3;
+
+                for (i = 0; i < 3; i++) {
+
+                    var dia = i + 1;
+
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    if (vDiaAC >= dia) {
+
+                        mesA++;
+
+                        var campo = "element.mes" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+
+                         if (element.descripcion == "TIEMPO DE FORMALIZACION OF. APROBADA") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        //console.log(valorObjetivo);
+
+                        if (element.descripcion == "TIEMPO DE FORMALIZACION OF. REGULAR") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+
+                        if (element.descripcion == "PAPERLESS TIEMPO DE FORMALIZACION OF. APROBADA") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 5.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+
+                         if (element.descripcion == "PORCENTAJE REPROCESOS FUVEX") {
+
+                            if (Number(valor) > Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) < Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 15) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                         if (element.descripcion == "PORCENTAJE EN LA FORMALIZACION FUNNEL") {
+
+                            if (Number(valor) < Number(valorObjetivo)) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                             else if (Number(valor) > Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 50) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+
+                        cuerpo = cuerpo + '<td>'
+
+
+                        //link = 'http://172.17.1.38:8075/Home/resumen?indicador=' + "@ViewBag.indicador" + '&producto=' + "@ViewBag.producto" + '&dia=DIARIO&TIPO=' + element.tipo + '&Estado=' + "@ViewBag.Estado" + '&MONTH=' + "@ViewBag.MONTH" + '&YEAR=' + "@ViewBag.YEAR" + '&percentil=' + eval(campo) + '&DAY=' + dia + ' ';
+
+                        link = 'http://localhost:5000/TB_CS_LISTA/Percentil_Detalle?nombre=' + nombre + '&tipo=' + element.tipo + '&frecuencia=' + "MENSUAL" + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + mesA + '&DAY=' + dia + '';
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI + '" style="' + claseA + '" > </i>  ';
+                            //  cuerpo = cuerpo + '<a href="@Url.Action(  "Resumen", "Home",   new {   indicador = @ViewBag.indicador, producto = @ViewBag.producto , dia = @ViewBag.dia, })" class="' + claseA + '">' + eval(campo) + '</a>';
+
+                            cuerpo = cuerpo + '<a href="' + link + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + link + '" class="' + claseA + '">' + '-' + '</a>';
+
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+
+
+                    }
+
+                }
+
+                //linkUpdate = 'http://localhost:5000/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+                linkUpdate = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+
+                if (vUsuario != "") {
+
+                //--------------------- BOTON EDITAR
+                cuerpo = cuerpo + '<td>';
+                //cuerpo = cuerpo + '<a class="badge badge-info" style="cursor:pointer" href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i>Editar indicadores</a>';
+                cuerpo = cuerpo + '<a style="cursor:pointer"  href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i></a>';
+                cuerpo = cuerpo + '</td>';
+
+                }
+
+                cuerpo = cuerpo + '</tr>';
+
+
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlMensualCMIFUVEX').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensualCMIFUVEX" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+        });
+
+
+
+    }
+
+
+    function funDiarioGifole(producto)
+    {
+
+        console.log("hola");
+
+        $('#tbDiarioGifole').remove();
+        $('#tbDiarioCMIGifole').remove();
+
+        $('#tbMensualGifole').remove();
+        $('#tbMensualCMIGifole').remove();
+
+
+        var url = "/PLD_TC_CONVENIO/FunListarGifole";
+        $.get(url, { nombre : producto , tipo : '@ViewBag.tipo', trans : '@ViewBag.txtTras' }, function (data) {
+
+            //console.log(data);
+
+            var cabecera = "";
+            var cuerpo = "";
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            //style="background-color:blue; color:white"
+            cabecera = '<thead >';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>. </th>';
+            cabecera = cabecera + '<th> </th>';
+            cabecera = cabecera + '</tr></thead>';
+
+            cabecera = cabecera + '<thead>';
+            cabecera = cabecera + '<tr>';
+            cabecera = cabecera + '<th>Indicador</th>';
+            cabecera = cabecera + '<th>V.O.</th>';
+            cabecera = cabecera + '</tr></thead>';
+
+
+            data.forEach(function (element) {
+
+                //console.log(element);
+                //console.log(element.codigo);
+
+                cabecera = cabecera + '<tr>';
+                cabecera = cabecera + '<td> <small style="color: blue">' + element.descripcion + '</small></td>';
+                cabecera = cabecera + '<td> <small style="color: green">' + element.valor_objetivo + '</small> </td>';
+                cabecera = cabecera + '</tr>';
+
+                  //console.log(cabecera);
+
+            });
+
+            $('#pnlDiarioGifole').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioGifole" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            //----------------------------------------------------------------------------
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+
+                //console.log(dia);
+                //console.log(vDiaAC);
+
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + Sem_dia + '</th>';
+
+
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr>';
+            for (i = 0; i < 31; i++) {
+
+                var dia = i + 1;
+                var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                if ((Sem_dia != "dom") && vDiaAC >= dia)
+                {
+
+                    cuerpo = cuerpo + '<th>' + dia + '</th>';
+                }
+            }
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+                cuerpo = cuerpo + '<tr>';
+                for (i = 0; i < 31; i++) {
+
+                    var dia = i + 1;
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    //if ((Sem_dia != "dom" && Sem_dia != "sab") && vDiaAC >= dia)
+                    if ((Sem_dia != "dom") && vDiaAC >= dia)
+                    {
+                        var campo = "element.dia" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+
+                        var link = "";
+
+                         if (element.descripcion == "TIEMPO DE FORMALIZACION TC GIFOLE") {
+
+                            if (Number(valor) > 1.5) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+
+                            else if (Number(valor) < Number(valorObjetivo)) {
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 1.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }
+                        //console.log(valorObjetivo);
+
+                        if (element.descripcion == "% RECHAZO TITULARES") {
+
+                            if (Number(valor) > 10) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) > Number(valorObjetivo) && Number(valor) < 10) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                        if (element.descripcion == "% RECHAZO ADICIONALES") {
+
+                            if (Number(valor) >= 28) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                                                          
+                            }
+                            else if (Number(valor) <= 28 && Number(valor) > Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";                                
+                            }
+                            else if (Number(valor) < Number(valorObjetivo)) {      
+                                    
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                        if (element.descripcion == "CUMPLIMIENTO DE ANS - EFECTIVIDAD - GIFOLE") {
+
+                            if (Number(valor) < 70) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) > 95) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 70 && Number(valor) <= 95) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+
+                        }
+                        if (element.descripcion == "EXITO EN LA FORMALIZACION DE OP. GIFOLE") {
+
+                            if (Number(valor) < 85) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > 95) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 85 && Number(valor) <= 95) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }                       
+
+                        cuerpo = cuerpo + '<td>'
+                        
+
+                        if (element.descripcion == "% REPROCESOS-DIA")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle?nombre=' + element.producto + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia + '&fecha_proceso=' + vAno + "/" + vMes + "/" + vDiaAC;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=UTILES-LAB'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=UTILES-LAB'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB")
+                        {
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=UTILES-LAB' + '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=UTILES-LAB' + '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI +  '" style="' + claseA + '" > </i>  ';
+                            
+
+                            cuerpo = cuerpo + '<a href="' + link + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + link + '" class="' + claseA + '">' + '-' + '</a>';
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+                    }
+                }
+
+                cuerpo = cuerpo + '</tr>';
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlDiarioCMIGifole').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbDiarioCMIGifole" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            $('#pnlMensualGifole').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensualGifole" >' + cabecera + '</table>').fadeIn(300000);//.innerHTML();
+
+            cuerpo = '<thead>';
+            cuerpo = cuerpo + '<tr style="line-height: 16px;">';
+
+            var theMonths = ["Ene", "Feb", "Mar", "Abr", "May",
+                "Jun", "Jul", "Agos", "Set", "Oct", "Nov", "Dic"];
+
+            var totalMes = theMonths.length;
+            var MesReal = vMes - 1; // porque Javascript cuenta los meses desde 0, Enero es 0, Febrero es 1, etc...
+
+            var todayDay = new Date(vAno, MesReal, vDiaAC);
+            todayDay.setMonth(todayDay.getMonth() - 2);
+            var mesBack = todayDay.getMonth();
+
+            for (i = 0; i < 3; i++) {
+
+                var mesNombre = theMonths[mesBack];
+
+                if (mesBack == totalMes) {
+
+                    mesBack = 0;
+                    cuerpo = cuerpo + '<th>' + 'Ene' + '</th>';
+                    mesBack++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesNombre + '</th>';
+                    mesBack++;
+                }
+            };
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<thead>';
+            cuerpo = cuerpo + '<tr style="line-height: 16px;">';
+
+            var todayDay2 = new Date(vAno, MesReal, vDiaAC);
+
+            todayDay2.setMonth(todayDay2.getMonth() - 2);
+
+            var mesBack2 = todayDay2.getMonth() + 1;
+
+            for (i = 0; i < 3; i++) {
+
+                if (mesBack2 == totalMes) {
+
+                    mesBack2 = 0;
+                    cuerpo = cuerpo + '<th>' + '12' + '</th>';
+                    mesBack2++;
+
+                } else {
+                    cuerpo = cuerpo + '<th>' + mesBack2 + '</th>';
+                    mesBack2++;
+                }
+            }
+
+            cuerpo = cuerpo + '</tr>';
+            cuerpo = cuerpo + '</thead>';
+
+            cuerpo = cuerpo + '<tbody>';
+
+            data.forEach(function (element) {
+
+                cuerpo = cuerpo + '<tr style="line-height: 5px;">';
+
+                var mesA = Number(vMes) - 3;
+
+                for (i = 0; i < 3; i++) {
+
+                    var dia = i + 1;
+
+                    var Sem_dia = diaSemanaP(dia, vMes, vAno);
+                    if (vDiaAC >= dia) {
+
+                        mesA++;
+
+                        var campo = "element.mes" + dia;
+
+                        var valor = eval(campo);
+                        var valorObjetivo = element.valor_objetivo;
+                        var claseI = "";
+                        var claseA = "";
+
+                        var linkUpdate = "";
+                        var linkMes = "";
+
+                        if (element.descripcion == "TIEMPO DE FORMALIZACION TC GIFOLE") {
+
+                            if (Number(valor) > 1.5) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+
+                            else if (Number(valor) < Number(valorObjetivo)) {
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= Number(valorObjetivo) && Number(valor) <= 1.5) {
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }
+                        //console.log(valorObjetivo);
+
+                        if (element.descripcion == "% RECHAZO TITULARES") {
+
+                            if (Number(valor) > 10) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) > Number(valorObjetivo) && Number(valor) < 10) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) <= Number(valorObjetivo)) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                        if (element.descripcion == "% RECHAZO ADICIONALES") {
+
+                            if (Number(valor) >= 28) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                                                          
+                            }
+                            else if (Number(valor) <= 28 && Number(valor) > Number(valorObjetivo)) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";                                
+                            }
+                            else if (Number(valor) < Number(valorObjetivo)) {      
+                                    
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                        }
+
+                        if (element.descripcion == "CUMPLIMIENTO DE ANS - EFECTIVIDAD - GIFOLE") {
+
+                            if (Number(valor) < 70) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) > 95) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) >= 70 && Number(valor) <= 95) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+                            }
+                        }
+                        if (element.descripcion == "EXITO EN LA FORMALIZACION DE OP. GIFOLE") {
+
+                            if (Number(valor) < 85) {
+                                //rojo
+                                claseA = "color: #F34A26";
+                                claseI = "far fa-circle";
+
+                            }
+                            else if (Number(valor) > 95) {
+
+                                claseA = "color: green";
+                                claseI = "far fa-circle";
+                            }
+                            else if (Number(valor) >= 85 && Number(valor) <= 95) {
+
+                                claseA = "color: orange";
+                                claseI = "far fa-circle";
+
+                            }
+                        }
+
+                        cuerpo = cuerpo + '<td>'                       
+
+
+                        @*if (element.descripcion == "TIEMPO-OFERTA-APROBADA-UTILES-LAB")
+                        {                        
+
+                            //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=APROBADO-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=APROBADO'+ '&tipo=APROBADO-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }
+                        if (element.descripcion == "TIEMPO-OFERTA-REGULAR-UTILES-LAB")
+                        {
+                           //link = 'http://localhost:5000/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=REGULAR-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                            link = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/Resumen_Detalle_Tiempos?nombre=' + element.producto + '&oferta=REGULAR'+ '&tipo=REGULAR-MES'+ '&percentil=' + eval(campo) + '&YEAR=' + "@ViewBag.YEAR" + '&MES=' + "@ViewBag.MES" + '&DAY=' + dia;
+                        }*@
+
+
+                        if (eval(campo) >= 0) {
+
+                            cuerpo = cuerpo + '<i class="' + claseI + '" style="' + claseA + '" > </i>  ';                            
+
+                            cuerpo = cuerpo + '<a href="' + linkMes + '" style="' + claseA + '">' + eval(campo) + '</a>';
+
+                        }
+                        else {
+                            cuerpo = cuerpo + '<a href="' + linkMes + '" class="' + claseA + '">' + '-' + '</a>';
+                        }
+
+                        cuerpo = cuerpo + '</td>';
+                    }
+
+                }
+
+                //linkUpdate = 'http://localhost:5000/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+                linkUpdate = 'http://172.17.1.38:8076/PLD_TC_CONVENIO/UpdateIndicadores?codigo=' + element.codigo;
+
+                if (vUsuario != "") {
+
+                //--------------------- BOTON EDITAR
+                cuerpo = cuerpo + '<td>';
+                //cuerpo = cuerpo + '<a class="badge badge-info" style="cursor:pointer" href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i>Editar indicadores</a>';
+                cuerpo = cuerpo + '<a style="cursor:pointer"  href="' + linkUpdate + '"><i class="zmdi zmdi-edit"></i></a>';
+                cuerpo = cuerpo + '</td>';
+
+                }
+
+                cuerpo = cuerpo + '</tr>';
+
+
+            });
+            cuerpo = cuerpo + '</tbody>';
+
+            $('#pnlMensualCMIGifole').append('<table class="table table-hover m-b-0" style="font-size:12.5px;" id="tbMensualCMIGifole" >' + cuerpo + '</table>').fadeIn(300000);//.innerHTML();
+
+        });
+
+
+
+    }
+
+
+
+</script>
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla - Fuvex
+                <small>RESUMEN </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla - Fuvex</a></li>
+                <li class="breadcrumb-item active">RESUMEN</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+
+    <div class="card">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="funDiario('PRESTAMO DE LIBRE DISPONIBILIDAD')" style="cursor:pointer" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="funDiario('TARJETA DE CREDITO'); funDiarioGifole('TARJETA DE CREDITO');" style="cursor:pointer" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="funDiario('CONVENIO')" style="cursor:pointer" aria-expanded="false">CONVENIO</a></li>
+
+                </ul>
+
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">                  
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>             
+
+            </div>
+        </div>
+        
+     </div>
+
+
+
+        <div class="tab-content">
+
+            <div id="home" class="tab-pane active">
+
+
+                <div class="row clearfix">
+                    <div class="col-md-12">
+                        <div class="card parents-list">
+                            <div class="header">
+
+
+
+                                <h2><strong>Atencion !</strong></h2>
+                            </div>
+
+                            <div class="body">
+                                <b>Leeme por favor</b>
+                                <br />
+                                <p>
+                                    Ud puede ver el detalle de los items "TIEMPO-OFERTA-APROBADA-UTILES-LAB", "TIEMPO-OFERTA-REGULAR-UTILES-LAB" y "% REPROCESOS-DIA" de <strong>CONTRATACION SENCILLA</strong>,
+                                    haciendo click en el icono del valor indicador de la tabla para Contratacion Sencilla CMI Diario y Contratacion Sencilla CMI Mensual.
+                                </p>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Contratacion Sencilla CMI</strong> Diario</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiario">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Contratacion Sencilla CMI</strong> Diario</h2>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiarioCMI">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Contratacion Sencilla CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensual">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Contratacion Sencilla CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensualCMI">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>FUVEX CMI</strong> Diario</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiarioFUVEX">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>FUVEX CMI</strong> Diario</h2>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiarioCMIFUVEX">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>FUVEX CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensualFUVEX">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>FUVEX CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensualCMIFUVEX">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Gifole CMI</strong> Diario</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiarioGifole">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Gifole CMI</strong> Diario</h2>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlDiarioCMIGifole">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Gifole CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensualGifole">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-8">
+                        <div class="card parents-list">
+                            <div class="header">
+                                <h2><strong>Gifole CMI</strong> Mensual</h2>
+
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive" id="pnlMensualCMIGifole">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

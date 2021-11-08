@@ -1,0 +1,128 @@
+﻿@model CMI_CS_FUVEX.Models.Entities.PLD_TC_CONVENIO_CALIDAD_GRAPH
+
+@{
+    ViewData["Title"] = "UpdateDatoFiabilidad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Calidad </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Calidad</li>
+                <li class="breadcrumb-item active"><i class="zmdi zmdi-edit"></i>Actualizar Dato para el Grafico de Fiabilidad Mensual</li>
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<body>
+
+    <div class="card" id="MenuTabs">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" id="linkPLD" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkTC" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkConvenio" aria-expanded="false">CONVENIO</a></li>
+
+                </ul>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="card parents-list">
+                <div class="header">
+
+                    
+
+                    <h2><strong>Actualizar dato </strong> para el grafico de Fiabilidad Mensual</h2>
+                </div>
+
+                <div class="body">
+                    <div class="col-md-4">
+                        <form asp-action="UpdateDatoFiabilidad">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="codigo" />
+                            <div class="form-group">
+                                <label asp-for="producto" class="control-label"></label>
+                                <input asp-for="producto" class="form-control" readonly />
+                                <span asp-validation-for="producto" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="descripcion_estado" class="control-label"></label>
+                                <input asp-for="descripcion_estado" class="form-control" readonly />
+                                <span asp-validation-for="descripcion_estado" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="fecha_proceso" class="control-label"></label>
+                                <input asp-for="fecha_proceso" class="form-control" readonly />
+                                <span asp-validation-for="fecha_proceso" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia_nombre" class="control-label"></label>
+                                <input asp-for="dia_nombre" class="form-control" readonly />
+                                <span asp-validation-for="dia_nombre" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="valor" class="control-label"></label>
+                                <input asp-for="valor" class="form-control" />
+                                <span asp-validation-for="valor" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Actualizar" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <p>
+        <a class="btn btn-danger" asp-action="Index">Atras</a>
+    </p>
+</body>
+

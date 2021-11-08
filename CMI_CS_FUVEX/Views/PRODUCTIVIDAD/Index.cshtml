@@ -1,0 +1,613 @@
+﻿<!DOCTYPE HTML>
+@{
+    ViewData["Title"] = "Index";
+}
+@*<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.common.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.softblue.css" />*@
+
+<style>
+    table tbody tr td {
+        font-size: 12px;
+        height: 40px;
+    }
+
+    table thead tr th {
+        font-size: 11px;
+        height: 30px;
+    }
+
+    select, option {
+        text-align: right;
+    }
+
+
+    table tbody tr td .form-control {
+        height: 20px;
+    }   
+</style>
+
+@*<link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/main.css">*@
+
+<script type="text/javascript">
+
+    var vMes = '@ViewBag.MES';
+    var vAno = '@ViewBag.YEAR';
+    var vDiaAC = '@ViewBag.DAY';
+
+    @*var ingresados = '@ViewBag.ingresados';
+
+    console.log(ingresados);*@
+    
+      window.onload = load;
+
+    function load() {
+
+        funFormalizacion('PRESTAMO DE LIBRE DISPONIBILIDAD'); //Funcion para traer la data de los graficos 
+        funFormalizacionFuvex('PLD')
+        
+    };
+
+    function funFormalizacion(producto)
+    {        
+
+        //---------------------------------GRAFICOS DE LINEAS
+
+        //-------------- TIEMPO OFERTA APROBADA
+        function TOfertaAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTOfertaAprobada = [];
+
+        //-------------- TIEMPO OFERTA REGULAR
+          function TOfertaRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTOfertaRegular = [];
+
+         //-------------- VALOR OBJETIVO APROBADA
+          function VObjetivoAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrVObjetivoAprobada = [];
+
+        //-------------- VALOR OBJETIVO REGULAR
+          function VObjetivoRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrVObjetivoRegular = [];
+
+
+        //---------------------------------TIEMPO ACUMULADO - GRAFICO DE BARRITAS
+
+         //-------------- VALOR OBJETIVO REGULAR
+          function TiemposAcumulados(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTiemposAcumulados = [];
+
+        //---------------------------------TIEMPO ACUMULADO - GRAFICO DE BARRITAS MENSUAL
+         function TiemposAcumuladosMensual(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTiemposAcumuladosMensual = [];
+
+        //--------------------------------------------------------------------------------------- GRAFICO DE LINEAS CUMPLIMIENTO DE ANS DIARIO
+        var url = "/PRODUCTIVIDAD/FunMostrarGrafico";
+        $.get(url, { nombre: producto }, function (data) {
+
+            data.forEach(function (element) {
+
+                if (element.oferta == "APROBADO") {
+
+                    arrTOfertaAprobada.push(new TOfertaAprobada(element.percentil, element.dia_nombre));
+                    arrVObjetivoAprobada.push(new VObjetivoAprobada(1, element.dia_nombre));
+                }
+                if (element.oferta == "REGULAR") {
+                    arrTOfertaRegular.push(new TOfertaRegular(element.percentil, element.dia_nombre));
+                    arrVObjetivoRegular.push(new VObjetivoRegular(2, element.dia_nombre));
+                }
+
+                //-------------------------------- Barritas
+                if (element.oferta == "APROBADO-MES" && element.tipo == "DÍAS ÚTILES" && element.dia_nombre == "T. Oferta Aprobada") {
+
+                    arrTiemposAcumulados.push(new TiemposAcumulados(element.percentil, element.dia_nombre));
+                }
+                if (element.oferta == "REGULAR-MES" && element.tipo == "DÍAS ÚTILES" && element.dia_nombre == "T. Oferta Regular") {
+                    arrTiemposAcumulados.push(new TiemposAcumulados(element.percentil, element.dia_nombre));
+                }
+                if (element.oferta == "APROBADO-MES" && element.tipo == "DÍAS ÚTILES") {
+                    arrTiemposAcumuladosMensual.push(new TiemposAcumuladosMensual(element.percentil, element.dia_nombre));
+                }
+                if (element.oferta == "REGULAR-MES" && element.tipo == "DÍAS ÚTILES") {
+                    arrTiemposAcumuladosMensual.push(new TiemposAcumuladosMensual(element.percentil, element.dia_nombre));
+                }
+
+            })
+            //console.log(data);
+        });
+
+
+
+        //-------- Gráfico de lineas, tiempos diarios
+
+        var charTiempos = new CanvasJS.Chart("chartFormalizacion", {
+            animationEnabled: true,
+
+            axisX: {
+                interval: 1,
+                valueFormatString: "DD MMM,YY"
+            },
+            axisY: {
+                includeZero: false,
+                suffix: " "
+            },
+            legend: {
+                cursor: "pointer",
+                fontSize: 16,
+                itemclick: toggleDataSeries
+            },
+            toolTip: {
+                shared: true
+            },
+            data: [{
+                name: "Tiempo Oferta Aprobada",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrTOfertaAprobada
+            },
+            {
+                name: "Tiempo Oferta Regular",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrTOfertaRegular
+            },
+            {
+                name: "Valor Objetivo Aprobado",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrVObjetivoAprobada
+            },
+            {
+                name: "Valor Objetivo Regular",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrVObjetivoRegular
+            },
+            ]
+        });
+        charTiempos.render();
+
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            }
+            else {
+                e.dataSeries.visible = true;
+            }
+            charTiempos.render();
+        }
+
+
+        //-------- Gráfico de columnas, tiempos acumulados oferta aprobada y regular
+
+        var chartColumnas = new CanvasJS.Chart("chartTiempoAcumulado", {
+            animationEnabled: true,
+            theme: "light1",
+            data: [{
+                type: "column", //change type to bar, line, area, pie, etc
+                indexLabelFontColor: "#5A5757",
+                indexLabelFontSize: 16,
+                indexLabelPlacement: "outside",
+                dataPoints: arrTiemposAcumulados
+            }]
+        });
+        chartColumnas.render();
+
+
+        //-------- Gráfico de columnas, tiempos acumulados oferta aprobada y regular MENSUAL
+
+        var chartAcumuladoMensual = new CanvasJS.Chart("chartDesembolsoMensual", {
+
+            animationEnabled: true,
+
+            axisY: {
+                titleFontColor: "#4F81BC",
+                lineColor: "#4F81BC",
+                labelFontColor: "#4F81BC",
+                tickColor: "#4F81BC"
+            },
+            axisY2: {
+
+                titleFontColor: "#C0504E",
+                lineColor: "#C0504E",
+                labelFontColor: "#C0504E",
+                tickColor: "#C0504E"
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor: "pointer"
+            },
+            data: [{
+
+                type: "column",
+                showInLegend: true,
+                yValueFormatString: "##.00",
+                dataPoints: arrTiemposAcumuladosMensual
+            }]
+        });
+
+        chartAcumuladoMensual.render();
+    }  
+
+
+    function funFormalizacionFuvex(producto)
+    {
+
+
+
+
+         //-------------- TIEMPO OFERTA APROBADA
+        function TOfertaAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTOfertaAprobada = [];
+
+        //-------------- TIEMPO OFERTA REGULAR
+          function TOfertaRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTOfertaRegular = [];
+
+         //-------------- VALOR OBJETIVO APROBADA
+          function VObjetivoAprobada(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrVObjetivoAprobada = [];
+
+        //-------------- VALOR OBJETIVO REGULAR
+          function VObjetivoRegular(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrVObjetivoRegular = [];
+
+        //---------------------------------TIEMPO ACUMULADO - GRAFICO DE BARRITAS
+
+         //-------------- VALOR OBJETIVO REGULAR
+          function TiemposAcumulados(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTiemposAcumulados = [];
+
+        //---------------------------------TIEMPO ACUMULADO - GRAFICO DE BARRITAS MENSUAL
+         function TiemposAcumuladosMensual(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+        var arrTiemposAcumuladosMensual = [];
+
+
+
+        //--------------------------------------------------------------------------------------- GRAFICO DE LINEAS CUMPLIMIENTO DE ANS DIARIO
+        var url = "/PRODUCTIVIDAD/FunTraerFuvexPercentiles";
+        $.get(url, { mes: vMes, anio: vAno, producto: producto, paperless: "FISICO", tipo: "DÍAS ÚTILES", frecuencia: "DIARIO"  }, function (data) {
+
+            console.log(data);
+
+            data.forEach(function (element) {
+
+                if (element.nombrE_TIPO_OFERTA == "APROBADOS" && element.tipo == "DÍAS ÚTILES") {
+
+                    arrTOfertaAprobada.push(new TOfertaAprobada(element.percentil, element.fecha));
+                    arrVObjetivoAprobada.push(new VObjetivoAprobada(1, moment(element.fecha).format('DD-MM')));
+                }
+                if (element.nombrE_TIPO_OFERTA == "REGULAR" && element.tipo == "DÍAS ÚTILES") {
+                    arrTOfertaRegular.push(new TOfertaRegular(element.percentil, element.fecha));
+                    arrVObjetivoRegular.push(new VObjetivoRegular(2, moment(element.fecha).format('DD-MM')));
+                }
+
+                //-------------------------------- Barritas
+                if (element.nombrE_TIPO_OFERTA == "APROBADOS" && element.tipo == "DÍAS ÚTILES" && element.frecuencia == "MES") {
+
+                    arrTiemposAcumulados.push(new TiemposAcumulados(element.percentil, moment(element.fecha).format('DD-MM-YYYY')));
+                }
+                if (element.nombrE_TIPO_OFERTA == "REGULAR" && element.tipo == "DÍAS ÚTILES" && element.frecuencia == "MES") {
+
+                    arrTiemposAcumulados.push(new TiemposAcumulados(element.percentil, moment(element.fecha).format('DD-MM-YYYY')));
+                }
+                //if (element.nombrE_TIPO_OFERTA == "APROBADOS" && element.tipo == "DÍAS ÚTILES") {
+                //    arrTiemposAcumuladosMensual.push(new TiemposAcumuladosMensual(element.percentil, element.fecha));
+                //}
+                //if (element.nombrE_TIPO_OFERTA == "REGULAR" && element.tipo == "DÍAS ÚTILES") {
+                //    arrTiemposAcumuladosMensual.push(new TiemposAcumuladosMensual(element.percentil, element.dia_nombre));
+                //}
+
+            })
+            //console.log(data);
+        });
+
+
+        //-------- Gráfico de lineas, tiempos diarios
+
+        var charTiemposFuvex = new CanvasJS.Chart("chartFormalizacionFuvex", {
+            animationEnabled: true,
+
+            axisX: {
+                interval: 1,
+                valueFormatString: "DD MMM,YY"
+            },
+            axisY: {
+                includeZero: false,
+                suffix: " "
+            },
+            legend: {
+                cursor: "pointer",
+                fontSize: 16,
+                itemclick: toggleDataSeries
+            },
+            toolTip: {
+                shared: true
+            },
+            data: [{
+                name: "Tiempo Oferta Aprobada",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrTOfertaAprobada
+            },
+            {
+                name: "Tiempo Oferta Regular",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrTOfertaRegular
+            },
+            {
+                name: "Valor Objetivo Aprobado",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrVObjetivoAprobada
+            },
+            {
+                name: "Valor Objetivo Regular",
+                type: "spline",
+                yValueFormatString: "##.00",
+                showInLegend: true,
+                dataPoints: arrVObjetivoRegular
+            },
+            ]
+        });
+        charTiemposFuvex.render();
+
+        function toggleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            }
+            else {
+                e.dataSeries.visible = true;
+            }
+            charTiemposFuvex.render();
+        }
+
+
+        //-------- Gráfico de columnas, tiempos acumulados oferta aprobada y regular
+
+        var chartColumnasFuvex = new CanvasJS.Chart("chartTiempoAcumuladoFuvex", {
+            animationEnabled: true,
+            theme: "light1",
+            data: [{
+                type: "column", //change type to bar, line, area, pie, etc
+                indexLabelFontColor: "#5A5757",
+                indexLabelFontSize: 16,
+                indexLabelPlacement: "outside",
+                dataPoints: arrTiemposAcumulados
+            }]
+        });
+        chartColumnasFuvex.render();
+
+    }
+
+</script>
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Tiempo de Formalizacion Dias Laborales </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Tiempo de Formalizacion Dias Laborales</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<body>
+
+    <div class="card">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="funFormalizacion('PRESTAMO DE LIBRE DISPONIBILIDAD');funFormalizacionFuvex('PLD')" style="cursor:pointer" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="funFormalizacion('TARJETA DE CREDITO');funFormalizacionFuvex('TC')" style="cursor:pointer" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="funFormalizacion('CONVENIO')" style="cursor:pointer" aria-expanded="false">CONVENIO</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content">
+
+        <div id="home" class="tab-pane active">
+
+            <div class="row clearfix">
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Contratacion Sencilla</strong> Tiempo de Formalizacion Dias Laborales</h2>
+
+                        </div>
+
+                        <div id="chartFormalizacion" style="height: 300px; width: 100%;"></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Contratacion Sencilla</strong> Tiempo Acumulado M: @ViewBag.MES - A: @ViewBag.YEAR</h2>
+                        </div>
+
+                        <div class="body">
+                            <div id="chartTiempoAcumulado" style="height: 300px; width: 100%;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Contratacion Sencilla</strong> Tiempo Desembolso Mensual</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartDesembolsoMensual" style="height: 300px; width: 90%;"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+            <div class="row clearfix">
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Fuvex</strong> Tiempo de Formalizacion Dias Laborales</h2>
+
+                        </div>
+
+                        <div id="chartFormalizacionFuvex" style="height: 300px; width: 100%;"></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Fuvex</strong> Tiempo Acumulado M: @ViewBag.MES - A: @ViewBag.YEAR</h2>
+                        </div>
+
+                        <div class="body">
+                            <div id="chartTiempoAcumuladoFuvex" style="height: 300px; width: 100%;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Fuvex</strong> Tiempo Desembolso Mensual</h2>
+
+                        </div>
+                        <div class="body">
+                            <div id="chartDesembolsoMensualFuvex" style="height: 300px; width: 90%;"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <script src="https://momentjs.com/downloads/moment.js"></script>
+
+            @*tablas*@
+
+            @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+        <script src="https://cdn3.devexpress.com/jslib/20.1.4/js/dx.all.js"></script>
+
+        <script src="~/js/tablaDesglose.js"></script>*@
+        </div>
+    </div>
+
+</body>
+
+

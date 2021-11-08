@@ -1,0 +1,172 @@
+﻿@model IEnumerable<CMI_CS_FUVEX.Models.Entities.PLD_TC_CONVENIO_DETALLE_TIEMPOS>
+
+@{
+    ViewData["Title"] = "Resumen_Detalle_Tiempos";
+}
+
+<style>
+    table tbody tr td {
+        font-size: 12px;
+    }
+</style>
+
+
+
+<script type="text/javascript">
+
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
+</script>
+
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Detalle de Tiempos</small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Detalle de Tiempos</li>
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="card parents-list">
+                <div class="header">
+                    <h2><strong>Detalle de Tiempos </strong>Diario</h2>
+
+                    <ul class="header-dropdown">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <strong>  Descargar </strong> <i class="zmdi zmdi-more"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right slideUp">
+                                <li> <a onclick="tableToExcel('example', 'Detalle de Expedientes')" style="cursor:pointer">Exportar Excel</a>  </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                    <br />
+                </div>
+
+
+                <div class="body">
+                    <div class="table-responsive">
+
+                        <table class="table table-hover m-b-0" style="width:auto;font-size:13px;" id="example">
+                            @{int con = 0;}
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.nro_expediente)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.tiempo)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.perfil)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.nombre_producto)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.nombre_tipo_oferta)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.fecha_hora_envio)
+                                    </th>
+                                    @*<th>
+                                        @Html.DisplayNameFor(model => model.tipo)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.fecha_proceso)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var estado = "";
+
+                                    if (@ViewBag.percentil == item.tiempo)
+                                    {
+                                        estado = "bg-blue";
+                                    }
+                                    con = @con + 1;
+
+                                    <tr class="@estado">
+                                        <td style="text-align:center">@con</td>
+                                        <td>
+                                            <strong> @Html.DisplayFor(modelItem => item.nro_expediente)</strong>
+                                        </td>
+                                        <td>
+                                            <strong> @Html.DisplayFor(modelItem => item.tiempo)</strong>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.perfil)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.nombre_producto)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.nombre_tipo_oferta)
+                                        </td>
+                                        <td>
+                                            <strong> @Html.DisplayFor(modelItem => item.fecha_hora_envio)</strong>
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.tipo)
+                                        </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.fecha_proceso)
+                                        </td>
+                                        <td>
+                                            <a class="badge badge-info" style="cursor:pointer" asp-action="Resumen_Detalle_Tiempos_Bandejas"
+                                               asp-route-expediente="@item.nro_expediente" asp-route-producto="@item.nombre_producto"
+                                               asp-route-oferta="@item.nombre_tipo_oferta"
+                                               asp-route-MES="@ViewBag.mesdata"
+                                               asp-route-YEAR="@ViewBag.aniodata"
+                                               asp-route-DAY="@ViewBag.diadata">Detalle bandejas</a>
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p>
+    <a class="btn btn-danger" asp-action="Index">Volver al tablero</a>
+</p>
+
+
+
+
+

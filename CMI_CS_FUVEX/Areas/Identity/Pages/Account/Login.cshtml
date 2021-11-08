@@ -1,0 +1,113 @@
+﻿@page
+@model LoginModel
+
+@*@using Microsoft.AspNetCore.Http;*@
+
+
+@{
+    Layout = null;
+}
+
+<html class="no-js " lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+
+    <title>:: CMI - CONSUMO ::</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/main.css">
+    <link rel="stylesheet" href="~/assets/css/authentication.css">
+    <link rel="stylesheet" href="~/assets/css/color_skins.css">
+</head>
+
+<body class="theme-blush authentication sidebar-collapse">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-transparent">
+        <div class="container">
+            <div class="navbar-translate n_logo">
+
+                <strong><a class="navbar-brand" href="javascript:void(0);" title="" target="_blank">Cuadro de Mando Integral de Contratacion Sencilla y FUVEX </a></strong>
+
+
+            </div>
+
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="page-header">
+        <div class="page-header-image" style="background-image:url(/images/imagenbbva.jpg)"></div>
+        <div class="container">
+            <div class="col-md-12 content-center">
+                <div class="card-plain">
+                    <form class="form" id="account" method="post">
+                        <div class="header">
+
+                            <h5>CMI CS-FUVEX</h5>
+                        </div>
+                        <div class="content">
+                            <div class="input-group">
+                                <input asp-for="Input.Codigo" type="text" class="form-control" placeholder="Ingrese su Registro">
+                                <span asp-validation-for="Input.Codigo" class="input-group-addon">
+
+                                </span>
+                            </div>
+                            <div class="input-group">
+                                <input asp-for="Input.Password" type="password" placeholder="Ingrese Contraseña" class="form-control" />
+                                <span asp-validation-for="Input.Password" class="input-group-addon">
+
+                                </span>
+                            </div>
+                            @*<div class="input-group">
+                                <div class="checkbox">
+                                    <label asp-for="Input.RememberMe">
+                                        <input asp-for="Input.RememberMe" />
+                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                    </label>
+                                </div>
+                            </div>*@
+
+                        </div>
+                        <div class="footer text-center">
+                            <button type="submit" class="btn btn-success btn-round btn-lg btn-block ">Entrar</button>
+                            <h5><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Nuevo Usuario</a></h5>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+
+                <div class="copyright">
+                    &copy;
+                    <script>
+                            document.write(new Date().getFullYear())
+                    </script>,
+                    <span>Copyright © OPPLUS <a href="" target="_blank">Area de Calidad y Proyectos</a></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="~/assets/bundles/libscripts.bundle.js"></script>
+    <script src="~/assets/bundles/vendorscripts.bundle.js"></script> <!-- Lib Scripts Plugin Js -->
+
+    <script>
+            $(".navbar-toggler").on('click', function () {
+                $("html").toggleClass("nav-open");
+            });
+            //=============================================================================
+            $('.form-control').on("focus", function () {
+                $(this).parent('.input-group').addClass("input-group-focus");
+            }).on("blur", function () {
+                $(this).parent(".input-group").removeClass("input-group-focus");
+            });
+    </script>
+</body>
+</html>

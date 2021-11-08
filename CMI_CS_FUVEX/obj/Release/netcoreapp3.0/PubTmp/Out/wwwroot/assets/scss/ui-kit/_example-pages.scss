@@ -1,0 +1,119 @@
+// style for the profile page
+.profile-page{
+
+    .page-header{
+        min-height: 550px;
+    }
+
+    .profile-container{
+        color: #FFFFFF;
+    }
+    .photo-container{
+        width: 123px;
+        height: 123px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 0 auto;
+        box-shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.3);
+    }
+
+    .title{
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .description,
+    .category{
+        text-align: center;
+    }
+
+    h5.description{
+        max-width: 700px;
+        margin: 20px auto 75px;
+    }
+
+    .nav-align-center{
+        margin-top: 30px;
+    }
+
+    .content{
+        max-width: 450px;
+        margin: 0 auto;
+
+        .social-description{
+            display: inline-block;
+            max-width: 150px;
+            width: 145px;
+            text-align: center;
+            margin: 15px 0 0px;
+
+            h2{
+                margin-bottom: 15px;
+            }
+        }
+    }
+
+    .button-container{
+        text-align: center;
+        margin-top: -106px;
+    }
+
+    .collections{
+        img{
+            margin-bottom: 30px;
+        }
+    }
+
+    .gallery{
+        margin-top: 45px;
+        padding-bottom: 50px;
+    }
+}
+
+.authentication{
+
+    .card-plain{
+        border-radius: $border-radius-large;
+        padding-bottom: $padding-base-horizontal;
+        max-width: 320px;
+
+        .header{
+            @extend .p-b-20;
+            h5{
+                @extend .m-b-0;
+            }
+        }
+
+        .btn-wd{
+            min-width: 180px;
+        }
+
+        .logo-container{
+            width: 65px;
+            margin: 0 auto;
+            @extend .m-t-20;
+            @extend .m-b-20;
+
+            img{
+                width: 100%;
+            }
+        }
+
+        &.card-plain{
+            margin: 0 auto;
+            @include input-coloured-bg($opacity-5, $white-color, $white-color, $transparent-bg, $opacity-2, $opacity-2);
+
+            .input-group-addon,
+            .form-group.form-group-no-border .input-group-addon,
+            .input-group.form-group-no-border .input-group-addon{
+                color: $opacity-5;
+            }
+        }
+    }
+
+    .link{
+        font-size: 12px;
+        color: $white-color;
+        text-decoration: none;
+    }
+}

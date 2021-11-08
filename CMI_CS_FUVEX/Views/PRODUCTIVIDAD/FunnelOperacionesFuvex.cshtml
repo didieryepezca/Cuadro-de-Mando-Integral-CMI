@@ -1,0 +1,174 @@
+﻿@model IEnumerable<CMI_CS_FUVEX.Models.Entities.TB_FUVEX_FUNNEL>
+
+@{
+    ViewData["Title"] = "FunnelOperacionesFuvex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    var vMes = '@ViewBag.MES';
+    var vAno = '@ViewBag.YEAR';
+    var vDiaAC = '@ViewBag.DAY';
+
+     window.onload = load;
+
+    function load() {
+        
+        funGraficosFunnel('PLD');     
+
+    };
+
+
+    function funGraficosFunnel(producto) {
+
+        $('#EtiquetaMesActual').remove();
+        //---------------------------------FUNNEL GRAFICOS ACUMULADOS
+        function FunnelEncuentros(y, label) {
+            this.y = y;
+            this.label = label;
+        };
+        var arrFunnelEncuentros = [];
+
+        var ingresosActuales = 0;
+        var desembolsosActuales = 0;        
+
+        var convTActual = 0;
+        var convTActualF = 0;
+
+        var stringMesActual = "";
+
+        var url = "/PRODUCTIVIDAD/FunTraerFunnelFuvex";
+        $.get(url, { nombre: producto }, function (data) {
+
+            //console.log(data);
+            data.forEach(function (element) {
+
+                if (element.descripcion == "INGRESADOS" || element.descripcion == "FINALIZADOS") {
+
+                    arrFunnelEncuentros.push(new FunnelEncuentros(element.cantidad, element.descripcion));
+                }
+                 if (element.descripcion == "INGRESADOS") {
+
+                     ingresosActuales = element.cantidad;
+                }
+
+                 if (element.descripcion == "FINALIZADOS") {
+
+                    desembolsosActuales = element.cantidad;
+                }
+            });
+
+            //console.log(arrFunnelEncuentros);
+
+            convTActual = (desembolsosActuales / ingresosActuales) * 100;
+            convTActualF = (isNaN(convTActual) ? 0 : convTActual);
+            stringMesActual = stringMesActual + '<h6 id="EtiquetaMesActual"><strong>CONVERSION TOTAL: '+ convTActualF.toLocaleString('en') + '%</strong></h6>';
+            $('#etiquetaFunnelFuvex').append(stringMesActual);
+        });
+
+        //---------------------------------------------------------------------- FUNNEL GRAFICOS MES ACTUAL
+        var chartFunnelMesActual = new CanvasJS.Chart("chartFunnelFuvex", {
+            animationEnabled: true,
+            colorSet: "greenShades",
+            title: {
+                text: "FUNNEL EN CURSO"
+            },
+            data: [{
+                type: "funnel",
+                indexLabel: "{label} - {y}",
+                toolTipContent: "<b>{label}</b>: {y} <b></b>",
+                neckWidth: 20,
+                neckHeight: 0,
+                valueRepresents: "area",
+                dataPoints: arrFunnelEncuentros
+            }]
+        });
+        //calculatePercentage();
+        chartFunnelMesActual.render();
+    }
+</script>
+
+
+
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Funnel de Operaciones Fuvex</small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Funnel de Operaciones Fuvex</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<body>
+    <div class="card">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="funGraficosFunnel('PLD');" style="cursor:pointer" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" onclick="funGraficosFunnel('TC');" style="cursor:pointer" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane active">
+            <div class="row">
+
+                <div class="col-md-8">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Funnel de Operaciones Fuvex: </strong></h2>
+                        </div>
+
+                        <div class="body">
+                            <div id="chartFunnelFuvex" style="height: 500px; width: 83%;"></div>
+                        </div>
+
+                        <div class="footer">
+                            <div id="etiquetaFunnelFuvex" style="height: 20px; width: 100%;">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+        </div>
+    </div>
+</body>

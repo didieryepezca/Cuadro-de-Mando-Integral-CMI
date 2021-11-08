@@ -1,0 +1,212 @@
+﻿
+@{
+    ViewData["Title"] = "TuberiaTC";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.common.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.4/css/dx.softblue.css" />
+<script type="text/javascript">
+
+
+    var vMes = '@ViewBag.MES';
+    var vAno = '@ViewBag.YEAR';
+    var vDiaAC = '@ViewBag.DAY';
+
+
+    window.onload = load;
+
+    function load() {
+
+        funTuberia('TARJETA DE CREDITO');
+
+        };
+
+
+        function funTuberia(producto)
+        {
+            function EncuentrosTuberia(y,label) {
+            this.y = y;
+            this.label = label;
+         };
+            var arrEncuentrosTuberia = [];
+
+
+            var url = "/PRODUCTIVIDAD/FunMostrarTuberia";
+            $.get(url, { nombre: producto }, function (data) {
+
+
+                data.forEach(function (element) {
+                    ///-------------------------------------------------------------------------------GRAFICO DE BARRAS
+
+                    if (element.producto == producto) {
+
+                        arrEncuentrosTuberia.push(new EncuentrosTuberia(element.total, element.bandeja));
+                    }
+
+                })
+
+            });
+
+             //-------- Gráfico grande Mensual
+        var chartTuberia = new CanvasJS.Chart("chartTuberia", {
+            animationEnabled: true,
+            axisX: {
+                interval: 1
+            },
+            axisY: {
+                scaleBreaks: {
+                    type: "wavy",
+                    customBreaks: [{
+                        startValue: 80,
+                        endValue: 210
+                    },
+                    {
+                        startValue: 230,
+                        endValue: 600
+                    }
+                    ]
+                }
+            },
+            data: [{
+                type: "bar",
+               dataPoints: arrEncuentrosTuberia
+            }]
+        });
+
+            chartTuberia.render();
+
+
+
+        }
+
+</script>
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Tuberia y Seguimiento de Operaciones </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Tuberia y Seguimiento de Operaciones</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<body>
+    <div class="card">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <ul class="nav nav-tabs" id="myTab">
+                    
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" onclick="funTuberia('TARJETA DE CREDITO')" style="cursor:pointer" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-3">
+
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane active">
+
+            <div class="row clearfix">
+
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Tuberia de Contratacion Sencilla: </strong></h2>
+                        </div>
+
+                        <div class="body">
+                            <div id="chartTuberia" style="height: 300px; width: 100%;"></div>
+                        </div>
+
+                        <div class="footer">
+                            <div id="chartTuberiaFooter" style="height: 20px; width: 100%;">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card parents-list">
+                        <div class="header">
+                            <h2><strong>Seguimiento de Operaciones: </strong></h2>
+                        </div>
+
+                        <div class="body">
+                            <div id="tableSeguimientoOperaciones" style="height: auto; width: 100%;"></div>
+                        </div>
+
+                        <div class="footer">
+                            <div style="height: auto; width: 100%;">
+                                <div class="options">
+                                    <div class="caption">Options</div>
+                                    <div class="option">
+                                        <div id="autoExpand"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+    @*libreria y recurso para tabla dinamica del desglose de operaciones*@
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+    <script src="https://cdn3.devexpress.com/jslib/20.1.4/js/dx.all.js"></script>
+
+    <script src="~/js/tablaDesglose.js"></script>
+
+</body>

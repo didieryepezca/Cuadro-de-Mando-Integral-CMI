@@ -1,0 +1,277 @@
+﻿@model CMI_CS_FUVEX.Models.Entities.PLD_TC_CONVENIO
+
+@{
+    ViewData["Title"] = "UpdateIndicadores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12">
+            <h2>
+                Contratacion Sencilla
+                <small>Resumen </small>
+            </h2>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 text-right">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><i class="zmdi zmdi-home"></i>Contratacion Sencilla</a></li>
+                <li class="breadcrumb-item active">Resumen</li>
+                <li class="breadcrumb-item active"><i class="zmdi zmdi-edit"></i>Actualizar Indicadores del Resumen</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<body>
+
+    <div class="card" id="MenuTabs">
+        <!-- Nav tabs -->
+
+        <div class="row clearfix">
+
+            <div class="col-lg-9 col-md-9 col-3">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" id="linkPLD" aria-expanded="false">PRESTAMO DE LIBRE DISPONIBILIDAD</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkTC" aria-expanded="false">TARJETA DE CREDITO</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" id="linkConvenio" aria-expanded="false">CONVENIO</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-3">
+                <div class="row">
+                    <div class="col-4 p-r-0">
+                        <h5 class="m-b-5">@ViewBag.YEAR</h5>
+                        <small>Año</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="m-b-5">@ViewBag.MES</h5>
+                        <small>Mes</small>
+                    </div>
+                    <div class="col-4 p-l-0">
+                        <h5 class="m-b-5">@ViewBag.DAY</h5>
+                        <small>Dia</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="card parents-list">
+                <div class="header">
+                    <h2><strong>Actualizar indicadores </strong> del Resumen Mensual</h2>
+                </div>
+
+                <div class="body">
+
+                    <div class="col-md-4">
+                        <form asp-action="UpdateIndicadores">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="codigo" />
+                            <div class="form-group">
+                                <label asp-for="producto" class="control-label"></label>
+                                <input asp-for="producto" class="form-control"  readonly/>
+                                <span asp-validation-for="producto" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="descripcion" class="control-label"></label>
+                                <input asp-for="descripcion" class="form-control" readonly />
+                                <span asp-validation-for="descripcion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="valor_objetivo" class="control-label"></label>
+                                <input asp-for="valor_objetivo" class="form-control" readonly/>
+                                <span asp-validation-for="valor_objetivo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="fecha_proceso" class="control-label"></label>
+                                <input asp-for="fecha_proceso" class="form-control" readonly/>
+                                <span asp-validation-for="fecha_proceso" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia1" class="control-label"></label>
+                                <input asp-for="dia1" class="form-control" />
+                                <span asp-validation-for="dia1" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia2" class="control-label"></label>
+                                <input asp-for="dia2" class="form-control" />
+                                <span asp-validation-for="dia2" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia3" class="control-label"></label>
+                                <input asp-for="dia3" class="form-control" />
+                                <span asp-validation-for="dia3" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia4" class="control-label"></label>
+                                <input asp-for="dia4" class="form-control" />
+                                <span asp-validation-for="dia4" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia5" class="control-label"></label>
+                                <input asp-for="dia5" class="form-control" />
+                                <span asp-validation-for="dia5" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia6" class="control-label"></label>
+                                <input asp-for="dia6" class="form-control" />
+                                <span asp-validation-for="dia6" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia7" class="control-label"></label>
+                                <input asp-for="dia7" class="form-control" />
+                                <span asp-validation-for="dia7" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia8" class="control-label"></label>
+                                <input asp-for="dia8" class="form-control" />
+                                <span asp-validation-for="dia8" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia9" class="control-label"></label>
+                                <input asp-for="dia9" class="form-control" />
+                                <span asp-validation-for="dia9" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia10" class="control-label"></label>
+                                <input asp-for="dia10" class="form-control" />
+                                <span asp-validation-for="dia10" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia11" class="control-label"></label>
+                                <input asp-for="dia11" class="form-control" />
+                                <span asp-validation-for="dia11" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia12" class="control-label"></label>
+                                <input asp-for="dia12" class="form-control" />
+                                <span asp-validation-for="dia12" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia13" class="control-label"></label>
+                                <input asp-for="dia13" class="form-control" />
+                                <span asp-validation-for="dia13" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia14" class="control-label"></label>
+                                <input asp-for="dia14" class="form-control" />
+                                <span asp-validation-for="dia14" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia15" class="control-label"></label>
+                                <input asp-for="dia15" class="form-control" />
+                                <span asp-validation-for="dia15" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia16" class="control-label"></label>
+                                <input asp-for="dia16" class="form-control" />
+                                <span asp-validation-for="dia16" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia17" class="control-label"></label>
+                                <input asp-for="dia17" class="form-control" />
+                                <span asp-validation-for="dia17" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia18" class="control-label"></label>
+                                <input asp-for="dia18" class="form-control" />
+                                <span asp-validation-for="dia18" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia19" class="control-label"></label>
+                                <input asp-for="dia19" class="form-control" />
+                                <span asp-validation-for="dia19" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia20" class="control-label"></label>
+                                <input asp-for="dia20" class="form-control" />
+                                <span asp-validation-for="dia20" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia21" class="control-label"></label>
+                                <input asp-for="dia21" class="form-control" />
+                                <span asp-validation-for="dia21" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia22" class="control-label"></label>
+                                <input asp-for="dia22" class="form-control" />
+                                <span asp-validation-for="dia22" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia23" class="control-label"></label>
+                                <input asp-for="dia23" class="form-control" />
+                                <span asp-validation-for="dia23" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia24" class="control-label"></label>
+                                <input asp-for="dia24" class="form-control" />
+                                <span asp-validation-for="dia24" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia25" class="control-label"></label>
+                                <input asp-for="dia25" class="form-control" />
+                                <span asp-validation-for="dia25" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia26" class="control-label"></label>
+                                <input asp-for="dia26" class="form-control" />
+                                <span asp-validation-for="dia26" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia27" class="control-label"></label>
+                                <input asp-for="dia27" class="form-control" />
+                                <span asp-validation-for="dia27" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia28" class="control-label"></label>
+                                <input asp-for="dia28" class="form-control" />
+                                <span asp-validation-for="dia28" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia29" class="control-label"></label>
+                                <input asp-for="dia29" class="form-control" />
+                                <span asp-validation-for="dia29" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia30" class="control-label"></label>
+                                <input asp-for="dia30" class="form-control" />
+                                <span asp-validation-for="dia30" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="dia31" class="control-label"></label>
+                                <input asp-for="dia31" class="form-control" />
+                                <span asp-validation-for="dia31" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="mes1" class="control-label"></label>
+                                <input asp-for="mes1" class="form-control" />
+                                <span asp-validation-for="mes1" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="mes2" class="control-label"></label>
+                                <input asp-for="mes2" class="form-control" />
+                                <span asp-validation-for="mes2" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="mes3" class="control-label"></label>
+                                <input asp-for="mes3" class="form-control" />
+                                <span asp-validation-for="mes3" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Actualizar" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<div>
+    <a class="btn btn-danger" asp-action="Index">Volver</a>
+</div>
